@@ -1,0 +1,1 @@
+insert into user (age, name) values (20, 'SuhJinHa')
