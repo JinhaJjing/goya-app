@@ -1,52 +1,45 @@
 package com.group.goyaapp.domain
 
 import java.time.LocalDateTime
-import java.util.Date
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity
 class Account(
 
-    var id: String,
+    @Column(name = "id", unique = true)
+    var accountId: String,
 
-    var pw: String,
+    @Column(name = "pw")
+    var accountPW: String,
 
     @Id
+    @Column(name = "user_uid")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val user_uid: Long? = null,
 
     //@OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
     //val userLoanHistories: MutableList<UserLoanHistory> = mutableListOf(),
 ) {
-    var datetime_add: LocalDateTime? = null
+    @Column(name = "datetime_add")
+    var datetimeAdd: LocalDateTime? = null
 
-    var datetime_mod: LocalDateTime? = null
+    @Column(name = "datetime_mod")
+    var datetimeMod: LocalDateTime? = null
 
-    var datetime_last_login: LocalDateTime? = null
+    @Column(name = "datetime_last_login")
+    var datetimeLastLogin: LocalDateTime? = null
 
     init {
-        if (id.isBlank()) {
+        if (accountId.isBlank()) {
             throw IllegalArgumentException("이름은 비어 있을 수 없습니다")
         }
-        if (pw.isBlank()) {
+        if (accountPW.isBlank()) {
             throw IllegalArgumentException("비밀번호는 비어 있을 수 없습니다")
         }
     }
 
     fun updatePW(id: String) {
-        this.id = id
-    }
-
-    /*
-    fun loanBook(book: Book) {
-        this.userLoanHistories.add(UserLoanHistory(this, book.name))
-    }
-
-    fun returnBook(bookName: String) {
-        this.userLoanHistories.first { history -> history.bookName == bookName }.doReturn()
+        this.accountId = id
     }
 */
 }

@@ -10,8 +10,8 @@ data class AccountResponse(
     companion object {
         fun of(account: Account): AccountResponse {
             return AccountResponse(
-                id = account.id,
-                pw = account.pw,
+                id = account.accountId,
+                pw = account.accountPW,
             )
         }
     }

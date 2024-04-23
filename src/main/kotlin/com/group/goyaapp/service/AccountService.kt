@@ -3,8 +3,10 @@ package com.group.goyaapp.service
 import com.group.goyaapp.domain.Account
 import com.group.goyaapp.repository.AccountRepository
 import com.group.goyaapp.dto.request.AccountCreateRequest
+import com.group.goyaapp.dto.request.AccountDeleteRequest
 import com.group.goyaapp.dto.request.AccountUpdateRequest
 import com.group.goyaapp.dto.response.AccountResponse
+import com.group.goyaapp.util.fail
 import com.group.goyaapp.util.findByIdOrThrow
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -18,7 +20,10 @@ class AccountService(
     @Transactional
     fun saveAccount(request: AccountCreateRequest) {
         val newUser = Account(request.id, request.pw)
-        newUser.datetime_add = LocalDateTime.now()
+        val account = accountRepository.findByAccountId(request.id)
+        if (account != null) fail() // TODO : 200에 에러 메시지로 추가
+        newUser.datetimeAdd = LocalDateTime.now()
+        newUser.datetimeMod = LocalDateTime.now()
         accountRepository.save(newUser)
     }
 
@@ -29,14 +34,25 @@ class AccountService(
     }
 
     @Transactional
-    fun updatePW(request: AccountUpdateRequest) {
+    fun updateAccountLogin(request: AccountUpdateRequest): AccountResponse {
         val account = accountRepository.findByIdOrThrow(request.id)
-        account.updatePW(request.pw)
+        // TODO pw 검증
+        account.datetimeMod = LocalDateTime.now()
+        account.datetimeLastLogin = LocalDateTime.now()
+        return accountRepository.findByAccountId(request.id).let { AccountResponse.of(it!!) }
     }
 
     @Transactional
-    fun deleteAccount(id: String) {
-        val account = accountRepository.findByIdOrThrow(id)
+    fun updateAccountLogout(request: AccountUpdateRequest): AccountResponse {
+        val account = accountRepository.findByIdOrThrow(request.id)
+        account.datetimeMod = LocalDateTime.now()
+        account.datetimeLastLogin = LocalDateTime.now()
+        return accountRepository.findByAccountId(request.id).let { AccountResponse.of(it!!) }
+    }
+
+    @Transactional
+    fun deleteAccount(request: AccountDeleteRequest) {
+        val account = accountRepository.findByAccountIdAndAccountPW(request.id, request.pw) ?: fail()
         accountRepository.delete(account)
     }
 /*
