@@ -1,6 +1,6 @@
 package com.group.goyaapp.repository
 
-import com.group.goyaapp.domain.book.QBook.book
+import com.group.goyaapp.domain.QBook.book
 import com.group.goyaapp.dto.response.BookStatResponse
 import com.querydsl.core.types.Projections
 import com.querydsl.jpa.impl.JPAQueryFactory

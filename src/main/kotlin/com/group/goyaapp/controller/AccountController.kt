@@ -33,7 +33,7 @@ class AccountController(
     }
 
     @DeleteMapping("/account")
-    fun deleteUser(@RequestParam name: String) {
-        accountService.deleteAccount(name)
+    fun deleteUser(@RequestParam id: String) {
+        accountService.deleteAccount(id)
     }
 }

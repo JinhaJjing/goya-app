@@ -1,6 +1,6 @@
 package com.group.goyaapp.repository
 
-import com.group.goyaapp.domain.user.loanhistory.QUserLoanHistory.userLoanHistory
+import com.group.goyaapp.domain.QUserLoanHistory.userLoanHistory
 import com.group.goyaapp.domain.UserLoanHistory
 import com.group.goyaapp.domain.UserLoanStatus
 import com.querydsl.jpa.impl.JPAQueryFactory
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class UserLoanHistoryQuerydslRepository(
-  private val queryFactory: JPAQueryFactory, // TODO 뭐징?
+  private val queryFactory: JPAQueryFactory,
 ) {
 
   fun find(bookName: String, status: UserLoanStatus? = null): UserLoanHistory? {

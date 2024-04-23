@@ -1,8 +1,8 @@
 package com.group.goyaapp.repository
 
-import com.group.goyaapp.domain.user.QUser.user
+import com.group.goyaapp.domain.QUser.user
+import com.group.goyaapp.domain.QUserLoanHistory.userLoanHistory
 import com.group.goyaapp.domain.User
-import com.group.goyaapp.domain.user.loanhistory.QUserLoanHistory.userLoanHistory
 import com.querydsl.jpa.impl.JPAQueryFactory
 
 class UserRepositoryCustomImpl(
