@@ -1,22 +1,21 @@
 package com.group.goyaapp.controller
 
-import com.group.goyaapp.dto.request.AccountCreateRequest
-import com.group.goyaapp.dto.request.AccountDeleteRequest
-import com.group.goyaapp.dto.request.AccountUpdateRequest
-import com.group.goyaapp.dto.response.AccountResponse
-import com.group.goyaapp.service.AccountService
-import org.springframework.web.bind.annotation.GetMapping
+import com.group.goyaapp.dto.request.InventoryUpdateRequest
+import com.group.goyaapp.service.InventoryService
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class InventoryController(
-    private val accountService: AccountService,
+    private val inventoryService: InventoryService,
 ) {
 
     @PostMapping("/inventory")
-    fun saveUser(@RequestBody request: AccountCreateRequest) {
-        accountService.saveAccount(request)
+    fun saveUser(@RequestBody request: InventoryUpdateRequest) {
+        inventoryService.saveAccount(request)
     }
+
+    // TODO 아이템 획득
+    // TODO 아이템 사용/폐기
 }

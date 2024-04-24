@@ -1,5 +1,8 @@
 package com.group.goyaapp.dto.request
 
+import javax.persistence.EnumType
+
 data class InventoryUpdateRequest (
-    val user_uid: Long,
+    val userUid: Long,
+    val type: EnumType // TODO : DELETE, INSERT???
 )

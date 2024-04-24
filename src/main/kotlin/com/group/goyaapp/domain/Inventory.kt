@@ -6,11 +6,14 @@ import javax.persistence.*
 @Entity
 class Inventory(
 
-    @Column(name = "user_uid", unique = true)
+    @Column(name = "user_uid")
     var userUid: Long,
 
-    @Column(name = "pw")
-    var accountPW: String,
+    @Column(name = "item_id")
+    var itemId: String,
+
+    @Column(name = "item_count")
+    var itemCount: Long,
 
     @Id
     @Column(name = "rid")
@@ -26,9 +29,8 @@ class Inventory(
     @Column(name = "datetime_mod")
     var datetimeMod: LocalDateTime? = null
 
-    @Column(name = "datetime_last_login")
-    var datetimeLastLogin: LocalDateTime? = null
-
     init {
+        this.datetimeAdd = LocalDateTime.now()
+        this.datetimeMod = LocalDateTime.now()
     }
 }
