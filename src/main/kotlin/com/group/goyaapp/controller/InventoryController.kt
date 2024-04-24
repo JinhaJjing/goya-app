@@ -13,7 +13,7 @@ class InventoryController(
 
     @PostMapping("/inventory")
     fun saveUser(@RequestBody request: InventoryUpdateRequest) {
-        inventoryService.saveAccount(request)
+        //inventoryService.saveAccount(request)
     }
 
     // TODO 아이템 획득

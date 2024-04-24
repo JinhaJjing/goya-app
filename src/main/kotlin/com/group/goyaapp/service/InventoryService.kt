@@ -20,7 +20,7 @@ class InventoryService (
     @Transactional
     fun updateInventory(request: InventoryUpdateRequest): InventoryResponse {
         val inventory = inventoryRepository.findByUserUid(request.userUid)
-        inventory.itemCount +=1
+        //inventory.itemCount +=1
         return inventoryRepository.findByUserUid(request.userUid).let { InventoryResponse.of(it!!) }
     }
 }
