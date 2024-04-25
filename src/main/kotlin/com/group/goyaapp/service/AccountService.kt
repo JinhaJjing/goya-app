@@ -21,7 +21,7 @@ class AccountService(
     fun saveAccount(request: AccountCreateRequest) {
         val newUser = Account(request.id, request.pw)
         val account = accountRepository.findByAccountId(request.id)
-        if (account != null) fail() // TODO : 200에 에러 메시지로 추가
+        if (account != null) fail()
         newUser.datetimeAdd = LocalDateTime.now()
         newUser.datetimeMod = LocalDateTime.now()
         accountRepository.save(newUser)
@@ -36,7 +36,7 @@ class AccountService(
     @Transactional
     fun updateAccountLogin(request: AccountUpdateRequest): AccountResponse {
         val account = accountRepository.findByIdOrThrow(request.id)
-        // TODO pw 검증
+        if (account.accountPW != request.pw) fail()
         account.datetimeMod = LocalDateTime.now()
         account.datetimeLastLogin = LocalDateTime.now()
         return accountRepository.findByAccountId(request.id).let { AccountResponse.of(it!!) }
@@ -55,12 +55,12 @@ class AccountService(
         val account = accountRepository.findByAccountIdAndAccountPW(request.id, request.pw) ?: fail()
         accountRepository.delete(account)
     }
-/*
-    @Transactional(readOnly = true)
-    fun getUserLoanHistories(): List<UserLoanHistoryResponse> {
-        return accountRepository.findAllWithHistories()
-            .map(UserLoanHistoryResponse::of)
-    }
-*/
+    /*
+        @Transactional(readOnly = true)
+        fun getUserLoanHistories(): List<UserLoanHistoryResponse> {
+            return accountRepository.findAllWithHistories()
+                .map(UserLoanHistoryResponse::of)
+        }
+    */
 
 }
