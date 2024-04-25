@@ -28,7 +28,7 @@ class UserService(
 
     @Transactional
     fun deleteUser(userUid: Int) {
-        val user = userRepository.findByUserUid(userUid) ?: fail()
+        val user = userRepository.findById(userUid) ?: fail()
         userRepository.delete(user)
     }
 

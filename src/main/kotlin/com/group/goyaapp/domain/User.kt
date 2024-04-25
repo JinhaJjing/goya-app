@@ -16,13 +16,13 @@ class User constructor(
     val id: Long? = null,
 ) {
     @Column(name = "level")
-    val level: Int = 0
+    val level: Int? = 0
 
     @Column(name = "exp")
-    val exp: Int = 0
+    val exp: Int? = 0
 
     @Column(name = "savepoint")
-    val savepoint: Int = 0
+    val savepoint: Int? = 0
 
     init {
         if (nickname.isBlank()) {

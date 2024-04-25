@@ -24,10 +24,10 @@ class Inventory(
     //val userLoanHistories: MutableList<UserLoanHistory> = mutableListOf(),
 ) {
     @Column(name = "datetime_add")
-    var datetimeAdd: LocalDateTime? = null
+    var datetimeAdd: LocalDateTime? = LocalDateTime.now()
 
     @Column(name = "datetime_mod")
-    var datetimeMod: LocalDateTime? = null
+    var datetimeMod: LocalDateTime? = LocalDateTime.now()
 
     init {
         this.datetimeAdd = LocalDateTime.now()

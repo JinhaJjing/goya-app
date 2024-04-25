@@ -3,13 +3,14 @@ package com.group.goyaapp.dto.response
 import com.group.goyaapp.domain.Inventory
 
 data class InventoryResponse(
-    val user_uid: Long,
-    //val count: Long, // TODO 아이템 리스트
+    val itemId: String,
+    val itemCount: Long
 ) {
     companion object {
-        fun of(account: Inventory): InventoryResponse {
+        fun of(inventory: Inventory): InventoryResponse {
             return InventoryResponse(
-                user_uid = account.userUid,
+                itemId = inventory.itemId,
+                itemCount = inventory.itemCount
             )
         }
     }

@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 interface UserRepository : JpaRepository<User, Long>, UserRepositoryCustom {
 
   fun findByNickname(name: String): User?
-  fun findByUserUid(userUid: Int): User?
+  fun findById(userUid: Int): User?
 
 }

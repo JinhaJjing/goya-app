@@ -35,13 +35,13 @@ class BookService(
             throw IllegalArgumentException("진작 대출되어 있는 책입니다")
         }
 
-        val user = userRepository.findByUserUid(request.userUid) ?: fail()
+        val user = userRepository.findById(request.userUid) ?: fail()
         user.loanBook(book)
     }
 
     @Transactional
     fun returnBook(request: BookReturnRequest) {
-        val user = userRepository.findByUserUid(request.userUid) ?: fail()
+        val user = userRepository.findById(request.userUid) ?: fail()
         user.returnBook(request.bookName)
     }
 
