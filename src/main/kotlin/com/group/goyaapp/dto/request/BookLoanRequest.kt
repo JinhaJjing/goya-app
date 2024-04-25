@@ -1,6 +1,6 @@
 package com.group.goyaapp.dto.request
 
 data class BookLoanRequest(
-  val userName: String,
+  val userUid: Int,
   val bookName: String
 )

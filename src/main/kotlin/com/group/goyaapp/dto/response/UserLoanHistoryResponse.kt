@@ -1,32 +1,18 @@
 package com.group.goyaapp.dto.response
 
 import com.group.goyaapp.domain.User
-import com.group.goyaapp.domain.UserLoanHistory
 
 data class UserLoanHistoryResponse(
-  val name: String, // 유저 이름
-  val books: List<BookHistoryResponse>
+    val name: String, // 유저 이름
+    val books: List<BookHistoryResponse>
 ) {
-  companion object {
-    fun of(user: User): UserLoanHistoryResponse {
-      return UserLoanHistoryResponse(
-        name = user.name,
-        books = user.userLoanHistories.map(BookHistoryResponse.Companion::of)
-      )
+    companion object {
+        fun of(user: User): UserLoanHistoryResponse {
+            return UserLoanHistoryResponse(
+                name = user.nickname,
+                books = user.userLoanHistories.map(BookHistoryResponse.Companion::of)
+            )
+        }
     }
-  }
 }
 
-data class BookHistoryResponse(
-  val name: String, // 책의 이름
-  val isReturn: Boolean,
-) {
-  companion object {
-    fun of(history: UserLoanHistory): BookHistoryResponse {
-      return BookHistoryResponse(
-        name = history.bookName,
-        isReturn = history.isReturn
-      )
-    }
-  }
-}

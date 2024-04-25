@@ -1,6 +1,6 @@
 package com.group.goyaapp.dto.request
 
 data class UserUpdateRequest(
-  val id: Long,
+  val userUid: Long,
   val name: String
 )

@@ -39,8 +39,8 @@ class UserServiceTest @Autowired constructor(
     // then
     val results = userRepository.findAll()
     assertThat(results).hasSize(1)
-    assertThat(results[0].name).isEqualTo("최태현")
-    assertThat(results[0].age).isNull()
+    assertThat(results[0].nickname).isEqualTo("최태현")
+    assertThat(results[0].level).isNull()
   }
 
   @Test
@@ -53,7 +53,7 @@ class UserServiceTest @Autowired constructor(
     ))
 
     // when
-    val results = userService.getUsers()
+    val results = userService.getUserAll()
 
     // then
     assertThat(results).hasSize(2) // [UserResponse(), UserResponse()]
@@ -73,7 +73,7 @@ class UserServiceTest @Autowired constructor(
 
     // then
     val result = userRepository.findAll()[0]
-    assertThat(result.name).isEqualTo("B")
+    assertThat(result.nickname).isEqualTo("B")
   }
 
   @Test

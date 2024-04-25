@@ -16,43 +16,43 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 class BookService(
-  private val bookRepository: BookRepository,
-  private val bookQuerydslRepository: BookQuerydslRepository,
-  private val userRepository: UserRepository,
-  private val userLoanHistoryQuerydslRepository: UserLoanHistoryQuerydslRepository,
+    private val bookRepository: BookRepository,
+    private val bookQuerydslRepository: BookQuerydslRepository,
+    private val userRepository: UserRepository,
+    private val userLoanHistoryQuerydslRepository: UserLoanHistoryQuerydslRepository,
 ) {
 
-  @Transactional
-  fun saveBook(request: BookRequest) {
-    val book = Book(request.name, request.type)
-    bookRepository.save(book)
-  }
-
-  @Transactional
-  fun loanBook(request: BookLoanRequest) {
-    val book = bookRepository.findByName(request.bookName) ?: fail()
-    if (userLoanHistoryQuerydslRepository.find(request.bookName, UserLoanStatus.LOANED) != null) {
-      throw IllegalArgumentException("진작 대출되어 있는 책입니다")
+    @Transactional
+    fun saveBook(request: BookRequest) {
+        val book = Book(request.name, request.type)
+        bookRepository.save(book)
     }
 
-    val user = userRepository.findByName(request.userName) ?: fail()
-    user.loanBook(book)
-  }
+    @Transactional
+    fun loanBook(request: BookLoanRequest) {
+        val book = bookRepository.findByName(request.bookName) ?: fail()
+        if (userLoanHistoryQuerydslRepository.find(request.bookName, UserLoanStatus.LOANED) != null) {
+            throw IllegalArgumentException("진작 대출되어 있는 책입니다")
+        }
 
-  @Transactional
-  fun returnBook(request: BookReturnRequest) {
-    val user = userRepository.findByName(request.userName) ?: fail()
-    user.returnBook(request.bookName)
-  }
+        val user = userRepository.findByUserUid(request.userUid) ?: fail()
+        user.loanBook(book)
+    }
 
-  @Transactional(readOnly = true)
-  fun countLoanedBook(): Int {
-    return userLoanHistoryQuerydslRepository.count(UserLoanStatus.LOANED).toInt()
-  }
+    @Transactional
+    fun returnBook(request: BookReturnRequest) {
+        val user = userRepository.findByUserUid(request.userUid) ?: fail()
+        user.returnBook(request.bookName)
+    }
 
-  @Transactional(readOnly = true)
-  fun getBookStatistics(): List<BookStatResponse> {
-    return bookQuerydslRepository.getStats()
-  }
+    @Transactional(readOnly = true)
+    fun countLoanedBook(): Int {
+        return userLoanHistoryQuerydslRepository.count(UserLoanStatus.LOANED).toInt()
+    }
+
+    @Transactional(readOnly = true)
+    fun getBookStatistics(): List<BookStatResponse> {
+        return bookQuerydslRepository.getStats()
+    }
 
 }

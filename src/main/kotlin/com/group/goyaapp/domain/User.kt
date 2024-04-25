@@ -1,44 +1,45 @@
 package com.group.goyaapp.domain
 
-import com.group.goyaapp.domain.Book
-import com.group.goyaapp.domain.UserLoanHistory
-import javax.persistence.CascadeType
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.OneToMany
+import javax.persistence.*
 
 @Entity
 class User constructor(
-    var name: String,
 
-    val age: Int?,
+    @Column(name = "nickname")
+    var nickname: String,
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
-  val userLoanHistories: MutableList<UserLoanHistory> = mutableListOf(),
+    val userLoanHistories: MutableList<UserLoanHistory> = mutableListOf(),
 
     @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  val id: Long? = null,
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long? = null,
 ) {
+    @Column(name = "level")
+    val level: Int = 0
 
-  init {
-    if (name.isBlank()) {
-      throw IllegalArgumentException("이름은 비어 있을 수 없습니다")
+    @Column(name = "exp")
+    val exp: Int = 0
+
+    @Column(name = "savepoint")
+    val savepoint: Int = 0
+
+    init {
+        if (nickname.isBlank()) {
+            throw IllegalArgumentException("닉네임은 비어 있을 수 없습니다")
+        }
     }
-  }
 
-  fun updateName(name: String) {
-    this.name = name
-  }
+    fun updateNickName(name: String) {
+        this.nickname = name
+    }
 
-  fun loanBook(book: Book) {
-    this.userLoanHistories.add(UserLoanHistory(this, book.name))
-  }
+    fun loanBook(book: Book) {
+        this.userLoanHistories.add(UserLoanHistory(this, book.name))
+    }
 
-  fun returnBook(bookName: String) {
-    this.userLoanHistories.first { history -> history.bookName == bookName }.doReturn()
-  }
+    fun returnBook(bookName: String) {
+        this.userLoanHistories.first { history -> history.bookName == bookName }.doReturn()
+    }
 
 }
