@@ -1,7 +1,7 @@
 package com.group.goyaapp.controller
 
-import com.group.goyaapp.dto.request.UserCreateRequest
-import com.group.goyaapp.dto.request.UserRequest
+import com.group.goyaapp.dto.request.user.UserCreateRequest
+import com.group.goyaapp.dto.request.user.UserRequest
 import com.group.goyaapp.dto.response.UserResponse
 import com.group.goyaapp.service.UserService
 import org.springframework.web.bind.annotation.*

@@ -1,4 +1,4 @@
-package com.group.goyaapp.dto.request
+package com.group.goyaapp.dto.request.account
 
 data class AccountUpdateRequest(
     val id: String,

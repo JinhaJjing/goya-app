@@ -1,4 +1,4 @@
-package com.group.goyaapp.dto.request
+package com.group.goyaapp.dto.request.book
 
 import com.group.goyaapp.domain.BookType
 

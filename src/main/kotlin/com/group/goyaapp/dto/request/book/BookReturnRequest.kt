@@ -1,4 +1,4 @@
-package com.group.goyaapp.dto.request
+package com.group.goyaapp.dto.request.book
 
 data class BookReturnRequest(
   val userUid: Int,

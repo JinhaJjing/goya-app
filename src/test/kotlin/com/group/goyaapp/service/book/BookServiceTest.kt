@@ -1,17 +1,13 @@
 package com.group.goyaapp.service.book
 
-import com.group.goyaapp.domain.Book
-import com.group.goyaapp.repository.BookRepository
-import com.group.goyaapp.domain.BookType
-import com.group.goyaapp.domain.User
-import com.group.goyaapp.repository.UserRepository
-import com.group.goyaapp.domain.UserLoanHistory
-import com.group.goyaapp.repository.UserLoanHistoryRepository
-import com.group.goyaapp.domain.UserLoanStatus
-import com.group.goyaapp.dto.request.BookLoanRequest
-import com.group.goyaapp.dto.request.BookRequest
-import com.group.goyaapp.dto.request.BookReturnRequest
+import com.group.goyaapp.domain.*
+import com.group.goyaapp.dto.request.book.BookLoanRequest
+import com.group.goyaapp.dto.request.book.BookRequest
+import com.group.goyaapp.dto.request.book.BookReturnRequest
 import com.group.goyaapp.dto.response.BookStatResponse
+import com.group.goyaapp.repository.BookRepository
+import com.group.goyaapp.repository.UserLoanHistoryRepository
+import com.group.goyaapp.repository.UserRepository
 import com.group.goyaapp.service.BookService
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.junit.jupiter.api.AfterEach

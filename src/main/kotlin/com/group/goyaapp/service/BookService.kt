@@ -2,9 +2,9 @@ package com.group.goyaapp.service
 
 import com.group.goyaapp.domain.Book
 import com.group.goyaapp.domain.UserLoanStatus
-import com.group.goyaapp.dto.request.BookLoanRequest
-import com.group.goyaapp.dto.request.BookRequest
-import com.group.goyaapp.dto.request.BookReturnRequest
+import com.group.goyaapp.dto.request.book.BookLoanRequest
+import com.group.goyaapp.dto.request.book.BookRequest
+import com.group.goyaapp.dto.request.book.BookReturnRequest
 import com.group.goyaapp.dto.response.BookStatResponse
 import com.group.goyaapp.repository.BookQuerydslRepository
 import com.group.goyaapp.repository.BookRepository

@@ -3,7 +3,7 @@ package com.group.goyaapp.service.user
 import com.group.goyaapp.domain.User
 import com.group.goyaapp.domain.UserLoanHistory
 import com.group.goyaapp.domain.UserLoanStatus
-import com.group.goyaapp.dto.request.UserCreateRequest
+import com.group.goyaapp.dto.request.user.UserCreateRequest
 import com.group.goyaapp.repository.UserLoanHistoryRepository
 import com.group.goyaapp.repository.UserRepository
 import com.group.goyaapp.service.UserService

@@ -1,8 +1,8 @@
 package com.group.goyaapp.controller
 
-import com.group.goyaapp.dto.request.AccountCreateRequest
-import com.group.goyaapp.dto.request.AccountDeleteRequest
-import com.group.goyaapp.dto.request.AccountUpdateRequest
+import com.group.goyaapp.dto.request.account.AccountCreateRequest
+import com.group.goyaapp.dto.request.account.AccountDeleteRequest
+import com.group.goyaapp.dto.request.account.AccountUpdateRequest
 import com.group.goyaapp.dto.response.AccountResponse
 import com.group.goyaapp.service.AccountService
 import org.springframework.web.bind.annotation.GetMapping

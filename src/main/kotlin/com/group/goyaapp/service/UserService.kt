@@ -1,8 +1,8 @@
 package com.group.goyaapp.service
 
 import com.group.goyaapp.domain.User
-import com.group.goyaapp.dto.request.UserCreateRequest
-import com.group.goyaapp.dto.request.UserRequest
+import com.group.goyaapp.dto.request.user.UserCreateRequest
+import com.group.goyaapp.dto.request.user.UserRequest
 import com.group.goyaapp.dto.response.UserLoanHistoryResponse
 import com.group.goyaapp.dto.response.UserResponse
 import com.group.goyaapp.repository.UserRepository
