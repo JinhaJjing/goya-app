@@ -1,12 +1,11 @@
 package com.group.goyaapp.service.user
 
 import com.group.goyaapp.domain.User
-import com.group.goyaapp.repository.UserRepository
 import com.group.goyaapp.domain.UserLoanHistory
-import com.group.goyaapp.repository.UserLoanHistoryRepository
 import com.group.goyaapp.domain.UserLoanStatus
 import com.group.goyaapp.dto.request.UserCreateRequest
-import com.group.goyaapp.dto.request.UserUpdateRequest
+import com.group.goyaapp.repository.UserLoanHistoryRepository
+import com.group.goyaapp.repository.UserRepository
 import com.group.goyaapp.service.UserService
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.junit.jupiter.api.AfterEach
@@ -31,7 +30,7 @@ class UserServiceTest @Autowired constructor(
   @DisplayName("유저 저장이 정상 동작한다")
   fun saveUserTest() {
     // given
-    val request = UserCreateRequest("최태현", null)
+    val request = UserCreateRequest("진하찡")
 
     // when
     userService.saveUser(request)
@@ -48,8 +47,8 @@ class UserServiceTest @Autowired constructor(
   fun getUsersTest() {
     // given
     userRepository.saveAll(listOf(
-      User("A", 20),
-      User("B", null),
+      User("JinhaJjing"),
+      User("Yalru"),
     ))
 
     // when
@@ -62,28 +61,13 @@ class UserServiceTest @Autowired constructor(
   }
 
   @Test
-  @DisplayName("유저 업데이트가 정상 동작한다")
-  fun updateUserNameTest() {
-    // given
-    val savedUser = userRepository.save(User("A", null))
-    val request = UserUpdateRequest(savedUser.id!!, "B")
-
-    // when
-    userService.updateUserName(request)
-
-    // then
-    val result = userRepository.findAll()[0]
-    assertThat(result.nickname).isEqualTo("B")
-  }
-
-  @Test
   @DisplayName("유저 삭제가 정상 동작한다")
   fun deleteUserTest() {
     // given
-    userRepository.save(User("A", null))
+    userRepository.save(User("JinhaJjing"))
 
     // when
-    userService.deleteUser("A")
+    userService.deleteUser(1)
 
     // then
     assertThat(userRepository.findAll()).isEmpty()
@@ -93,22 +77,21 @@ class UserServiceTest @Autowired constructor(
   @DisplayName("대출 기록이 없는 유저도 응답에 포함된다")
   fun getUserLoanHistoriesTest1() {
     // given
-    userRepository.save(User("A", null))
+    userRepository.save(User("얄루진하"))
 
     // when
     val results = userService.getUserLoanHistories()
 
     // then
     assertThat(results).hasSize(1)
-    assertThat(results[0].name).isEqualTo("A")
-    assertThat(results[0].books).isEmpty()
+    assertThat(results[0].name).isEqualTo("얄루진하")
   }
 
   @Test
   @DisplayName("대출 기록이 많은 유저의 응답이 정상 동작한다")
   fun getUserLoanHistoriesTest2() {
     // given
-    val savedUser = userRepository.save(User("A", null))
+    val savedUser = userRepository.save(User("얄루얄루"))
     userLoanHistoryRepository.saveAll(listOf(
       UserLoanHistory.fixture(savedUser, "책1", UserLoanStatus.LOANED),
       UserLoanHistory.fixture(savedUser, "책2", UserLoanStatus.LOANED),
