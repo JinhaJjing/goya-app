@@ -17,6 +17,7 @@ class UserService(
 	@Transactional
 	fun saveUser(request: UserCreateRequest): UserResponse {
 		val newUser = User(request.nickname)
+		// TODO 닉네임 유니크 체크
 		return userRepository.save(newUser).let { UserResponse.of(it) }
 	}
 	
