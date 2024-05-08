@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "goya-422605",
+  "private_key_id": "db446e6bebb48f3cd5d8b4cc859691b42aa647e3",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC5tzoBtyO5S+ub\nDfRuAhDjNcoXEY6XZ0/PNoda6gcvp73XdH7eJJ4maTERvMURf4WvB1KRjv2/x85x\n9/l2uWFCkyGhsgwWRLLYASbcKhGMVBJdako/YefRjmCYa1kxAwAM96FsmM3Lebgt\nAXvjF0huYMO/iniGZJv7ouOe/phtP0/OpPLiWJ9Dq90Gp/FV+1T14gO8JCZwaAZT\nkNE7C9HFCIrzYmLA8eRramPbIuYRYOWR7eav4xsYWon/puFpVYCUV9HvlM92T60S\nw1oLonAm0demHhEYQ9CIf1mBALDpc0VxKPGMfNu6duhzoZ1PY1ZLEgKqcdA0AxL3\n/shNVXdZAgMBAAECggEADiWkrTrGkDf1/lLFeu0nXNeHydK+5PkBaGHZVRXyGYbn\n/ECrOsAurUhiwjIkukeCPH9h98/yXn3u/lmLJFMiKJB4BbmVbXYq6toeRrPhsFSQ\nguiKOA0nkUa3ma9xFOhgmZxHgglF1qkysXhPzVBvERFyopBUIWYKnSmfDfPg/U6t\ntURrN0Nv1X5R/Y7lnXzHuFwfYOzRujrBquj21z5zL0T177gei8ue3mukub301Cy8\nMxneK0Hj5x/N1WUR2nmCrSm3RSKKlmSvbSPePUOLO3T3Qet7GXGMQiY+p9v3wlwD\n9PXPTh1OO+KMvFGtSpDHFdHbZYJkmaGClI7ne1d6jQKBgQDq+GfuoPLW2KowHHrH\nh3gxA/YZ6pIlWHTCZUWqdKDJDxK/ueooCo3BCg6+6lUG8BfkO9hnuEg/mMv1xyJ+\nYroImdxU1RNLtizCM5J/xo21jid3iMuhwJddvI7hBSBCVq46ZAVG3D3mm0AT/PW0\nl7P/jphMuSl5y/rReuweB58fuwKBgQDKVk8Ku5zEAvitR6nC8GvdyeXo+ogkdMqB\nDhItNVphdEyHlll3NWH3sFXBwa2oDNAsb5DkhtK1boNnBFrJgP2gE/b/J16S7q7z\nmSEOcpfkKosGUH6RWBW4vTayuygfNh7rGyIdYrLLjzNhKWhcY8FfY4bt9ER8a3H2\n5En+Imrh+wKBgEY4ysbULv7qbaJHQKJU6CSt7GS+Z8Lldq+KGJHinRK5gH7wDvy8\nerTQTqvb2GFka594CyqkNmNbRMlFJBflZXegk+p+a2/bF/FJ/GRXcI5r13uv1DuZ\nFSOccI7rO0LYKOWmcrVEqPM8PqA6nyvDkrWzZey4AZ82yNTGCb7HxFR1AoGAGAEb\nSXuugnaTyALreewJ7/sG4pfuVNziNWNU9rYQreUdOyy0Gndj0v3BfsYacwhqHgty\nVhpEny+oOS2EE8nQzQ/xSp4CE05rxQySpmMj7/a4HZypF1cq5IrWFWgsv18tVdkX\nOANAkPPBNbKy5dsT0tw84rgK8/PPRmoY+SReJ8cCgYAfnHhzar9OAiUOzqjoUDyL\ncDB5xrS2oM9Pp+OLE0MPdpXnvFbjagSR5q4RAUHs4AQzSi/WurpDjopkbGSHYL65\nEkx9Ocph7Z6RZQGsmeiYmjg793MqQocthLscqg5DDNmIBx2jV55bhe5q0C+YiQbD\n/qCzuja/PF5qYgf0SJzP/Q==\n-----END PRIVATE KEY-----\n",
+  "client_email": "goya-google-sheet@goya-422605.iam.gserviceaccount.com",
+  "client_id": "102503244328540888604",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/goya-google-sheet%40goya-422605.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

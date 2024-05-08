@@ -1,5 +1,6 @@
 package com.group.goyaapp
 
+import com.group.goyaapp.util.loadDataAll
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
@@ -7,5 +8,7 @@ import org.springframework.boot.runApplication
 class GoyaAppApplication
 
 fun main(args: Array<String>) {
-  runApplication<GoyaAppApplication>(*args)
+	runApplication<GoyaAppApplication>(*args)
+	
+	loadDataAll()
 }
