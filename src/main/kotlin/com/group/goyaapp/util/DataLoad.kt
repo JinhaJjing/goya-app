@@ -8,62 +8,76 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 
 fun loadDataAll() {
-	val sheetKeyHashMap = mutableMapOf<String, String>()
-	sheetKeyHashMap += "sheet1" to "mapData.json" // 시트 이름과 파일명를 매핑
-	sheetKeyHashMap += "sheet2" to "anotherData.json" // 시트 이름과 파일명를 매핑
+	// 맵 데이터
+	saveMapDataToFile("mapData.json", googleSheetDataLoad("sheet1"))
 	
-	sheetKeyHashMap.forEach { (sheetName, filename) ->
-		val sheet = googleSheetDataLoad(sheetName)
-		saveDataStream(filename, sheet)
-	}
+	// TODO : 그 외 데이터
+	readDataStream("mapData.json")
 }
 
 /**
- * 파일에 데이터를 저장
+ * 맵 기획데이터 저장
  */
-fun saveDataStream(filename: String, data: Any) {
+fun saveMapDataToFile(filename: String, data: Any) {
 	when (data) {
 		is List<*> -> {
-			val fos = FileOutputStream(filename)
-			val dos = DataOutputStream(fos)
-			
+			// 이부분을 커스터마이징하여 사용
+			var colList: List<*> = listOf<String>()
 			val mapDataList = mutableListOf<MapData>()
 			data.forEachIndexed() { idx, it ->
-				if (idx != 0) {
-					val it2 = it as List<*>
-					it2.map { println(it) }
+				if (idx == 0) {
+					colList = it as List<*>
+					colList.map { println(it) }
+				}
+				else {
+					val row = it as List<*>
+					row.map { println(it) }
 					val mapData = MapData(
-						map_id = it2[0].toString().toInt(), name = it2[1].toString(), condition = it2[2].toString()
+						map_id = row[colList.indexOf("맵id")].toString().toInt(),
+						name = row[colList.indexOf("맵이름")].toString(),
+						condition = row[colList.indexOf("조건")].toString()
 					)
 					mapDataList.add(mapData)
 				}
 			}
 			
-			val fileContents = Gson().toJson(mapDataList)
-			dos.write(fileContents.toByteArray())
-			
-			dos.flush()
-			dos.close()
-			fos.close()
+			writeDataFile(filename, mapDataList)
 		}
 	}
 }
 
 /**
- * 파일을 읽어서 데이터를 출력
+ * 파일에 데이터를 쓰기
  */
-fun readDataStream(filename: String) {
+fun writeDataFile(filename: String, mapDataList: Any) {
+	val fos = FileOutputStream(filename)
+	val dos = DataOutputStream(fos)
+	
+	val fileContents = Gson().toJson(mapDataList)
+	dos.write(fileContents.toByteArray())
+	
+	dos.flush()
+	dos.close()
+	fos.close()
+}
+
+/**
+ * 파일을 읽어서 데이터를 출력
+ * TODO 필요할 때 반환 형식 수정하기
+ */
+fun readDataStream(filename: String): MutableList<MapData> {
 	val fis = FileInputStream(filename)
 	val dis = DataInputStream(fis)
 	
 	val data = dis.bufferedReader().use { it.readLines() }
+	val mapDataList = mutableListOf<MapData>()
 	data.map {
-		val mapData = Gson().fromJson(it, MapData::class.java) // PersonData 객체로 변환
-		println(mapData.map_id)
-		println(mapData.name)
-		println(mapData.condition)
+		val mapData = Gson().fromJson(it, MapData::class.java)
+		mapDataList.add(mapData)
 	}
 	
 	fis.close()
 	dis.close()
+	
+	return mapDataList
 }

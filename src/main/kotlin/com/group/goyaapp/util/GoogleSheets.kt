@@ -36,6 +36,9 @@ fun getGoogleSheetService(): Sheets {
 	return service
 }
 
+/**
+ * 구글 시트 데이터를 로드
+ */
 fun googleSheetDataLoad(range: String): List<List<Any>> {
 	try {
 		val reponse: ValueRange = getGoogleSheetService().spreadsheets().values().get(SHEET_ID, range).execute()
