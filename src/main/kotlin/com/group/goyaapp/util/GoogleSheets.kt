@@ -10,7 +10,6 @@ import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.sheets.v4.Sheets
 import com.google.api.services.sheets.v4.SheetsScopes
 import com.google.api.services.sheets.v4.model.ValueRange
-import java.io.FileInputStream
 import java.io.IOException
 
 const val CREDENTIALS_FILE_PATH: String = "google_sheet/google_spread_sheet_key.json"
@@ -24,9 +23,10 @@ class GoogleSheetService {}
 @Throws(IOException::class)
 fun getCredentials(): Credential? {
 	val loader = GoogleSheetService::class.java.classLoader
-	return GoogleCredential.fromStream(
-		FileInputStream(loader.getResource(CREDENTIALS_FILE_PATH)?.file ?: CREDENTIALS_FILE_PATH)
-	).createScoped(SCOPES)
+	loader.getResourceAsStream(CREDENTIALS_FILE_PATH)?.let {
+		return GoogleCredential.fromStream(it).createScoped(SCOPES)
+	}
+	return null
 }
 
 fun getGoogleSheetService(): Sheets {
