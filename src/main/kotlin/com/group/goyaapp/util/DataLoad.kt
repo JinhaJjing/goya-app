@@ -69,12 +69,10 @@ fun readDataStream(filename: String): MutableList<MapData> {
 	val fis = FileInputStream(filename)
 	val dis = DataInputStream(fis)
 	
-	val data = dis.bufferedReader().use { it.readLines() }
 	val mapDataList = mutableListOf<MapData>()
-	data.map {
-		val mapData = Gson().fromJson(it, MapData::class.java)
-		mapDataList.add(mapData)
-	}
+	val fileContents = dis.readBytes().toString(Charsets.UTF_8)
+	val mapDataArray = Gson().fromJson(fileContents, Array<MapData>::class.java)
+	mapDataArray.map { mapDataList.add(it) }
 	
 	fis.close()
 	dis.close()
