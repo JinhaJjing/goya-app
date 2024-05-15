@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 class BookController(
 	private val bookService: BookService,
 ) {
-	
+	/*
 	@PostMapping("/book")
 	fun saveBook(
 		@RequestBody
@@ -45,5 +45,5 @@ class BookController(
 	fun getBookStatistics(): List<BookStatResponse> {
 		return bookService.getBookStatistics()
 	}
-	
+	*/
 }
