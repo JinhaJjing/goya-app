@@ -1,18 +1,97 @@
 package com.group.goyaapp.util
 
+import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
-import com.group.goyaapp.dto.MapData
+import com.group.goyaapp.dto.data.MapData
+import com.group.goyaapp.dto.data.QuestData
+import com.group.goyaapp.dto.data.TestData
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.lang.reflect.Type
 
-fun loadDataAll() {
-	// 맵 데이터
-	saveMapDataToFile("mapData.json", googleSheetDataLoad("sheet1"))
+
+fun loadDataAll() {    // 맵 데이터
+	saveTestDataToFile("test.json", googleSheetDataLoad("sheet1"))
+	saveQuestDataToFile("questData.json", googleSheetDataLoad("Quest"))
+	saveMapDataToFile("mapData.json", googleSheetDataLoad("Map"))
 	
-	// TODO : 그 외 데이터
-	readDataStream("mapData.json")
+	println("=========================서버 실행 완료=========================")
+	
+	// 데이터 파일 읽고 출력
+	// TODO 출력하지 말고 실제 비즈니스 로직에서 사용하기
+	//readDataStream<TestData>("test.json")
+	//readDataStream<QuestData>("questData.json")
+	//readDataStream<MapData>("mapData.json")
+}
+
+/**
+ * 테스트 기획데이터 저장
+ */
+fun saveTestDataToFile(filename: String, data: Any) {
+	when (data) {
+		is List<*> -> {            // 이부분을 커스터마이징하여 사용
+			var colList: List<*> = listOf<String>()
+			val testDataList = mutableListOf<TestData>()
+			data.forEachIndexed() { idx, it ->
+				if (idx == 0) {
+					colList = it as List<*>
+				}
+				else {
+					val row = it as List<*>
+					val testData = TestData(
+						mapId = row[colList.indexOf("맵id")].toString().toInt(),
+						name = row[colList.indexOf("맵이름")].toString(), condition = row[colList.indexOf("조건")].toString()
+					)
+					testDataList.add(testData)
+				}
+			}
+			
+			writeDataFile(filename, testDataList)
+		}
+	}
+}
+
+/**
+ * 퀘스트 기획데이터 저장
+ */
+fun saveQuestDataToFile(filename: String, data: Any) {
+	when (data) {
+		is List<*> -> {            // 이부분을 커스터마이징하여 사용
+			var colList: List<*> = listOf<String>()
+			val questDataMutableList = mutableListOf<QuestData>()
+			data.forEachIndexed() { idx, it ->
+				if (idx == 0) {
+					colList = it as List<*>
+				}
+				else {
+					val row = it as List<*>
+					val questData = QuestData(
+						questId = row[colList.indexOf("QuestID")].toString(),
+						questType = row[colList.indexOf("QuestType")].toString().toInt(),
+						questMapId = row[colList.indexOf("QuestMapID")].toString(),
+						preQuest = row[colList.indexOf("PreQuest")].toString(),
+						questGiveUp = row[colList.indexOf("QuestGiveUp")].toString().toInt(),
+						startNPC = row[colList.indexOf("StartNPC")].toString(),
+						startAction1 = row[colList.indexOf("StartAction1")].toString(),
+						startAction2 = row[colList.indexOf("StartAction2")].toString(),
+						startAction3 = row[colList.indexOf("StartAction3")].toString(),
+						missionCondition = row[colList.indexOf("MissionCondition")].toString(),
+						missionTarget = row[colList.indexOf("MissionTarget")].toString(),
+						missionCount = row[colList.indexOf("MissionCount")].toString().toInt(),
+						endNPC = row[colList.indexOf("EndNPC")].toString(),
+						endAction1 = row[colList.indexOf("EndAction1")].toString(),
+						endAction2 = row[colList.indexOf("EndAction2")].toString(),
+						endAction3 = row[colList.indexOf("EndAction3")].toString()
+					)
+					questDataMutableList.add(questData)
+				}
+			}
+			
+			writeDataFile(filename, questDataMutableList)
+		}
+	}
 }
 
 /**
@@ -20,28 +99,24 @@ fun loadDataAll() {
  */
 fun saveMapDataToFile(filename: String, data: Any) {
 	when (data) {
-		is List<*> -> {
-			// 이부분을 커스터마이징하여 사용
+		is List<*> -> {            // 이부분을 커스터마이징하여 사용
 			var colList: List<*> = listOf<String>()
-			val mapDataList = mutableListOf<MapData>()
+			val mapDataMutableList = mutableListOf<MapData>()
 			data.forEachIndexed() { idx, it ->
 				if (idx == 0) {
 					colList = it as List<*>
-					colList.map { println(it) }
 				}
 				else {
 					val row = it as List<*>
-					row.map { println(it) }
-					val mapData = MapData(
-						map_id = row[colList.indexOf("맵id")].toString().toInt(),
-						name = row[colList.indexOf("맵이름")].toString(),
-						condition = row[colList.indexOf("조건")].toString()
+					val questData = MapData(
+						mapID = row[colList.indexOf("MapID")].toString(),
+						unlockCondition = row[colList.indexOf("UnlockCondition")].toString()
 					)
-					mapDataList.add(mapData)
+					mapDataMutableList.add(questData)
 				}
 			}
 			
-			writeDataFile(filename, mapDataList)
+			writeDataFile(filename, mapDataMutableList)
 		}
 	}
 }
@@ -49,11 +124,11 @@ fun saveMapDataToFile(filename: String, data: Any) {
 /**
  * 파일에 데이터를 쓰기
  */
-fun writeDataFile(filename: String, mapDataList: Any) {
+fun writeDataFile(filename: String, dataList: Any) {
 	val fos = FileOutputStream(filename)
 	val dos = DataOutputStream(fos)
 	
-	val fileContents = Gson().toJson(mapDataList)
+	val fileContents = Gson().toJson(dataList)
 	dos.write(fileContents.toByteArray())
 	
 	dos.flush()
@@ -62,20 +137,33 @@ fun writeDataFile(filename: String, mapDataList: Any) {
 }
 
 /**
- * 파일을 읽어서 데이터를 출력
- * TODO 필요할 때 반환 형식 수정하기
+ * 데이터 파일 읽기(공통?!)
  */
-fun readDataStream(filename: String): MutableList<MapData> {
+fun <T> readDataStream(filename: String): ArrayList<T>? {
 	val fis = FileInputStream(filename)
 	val dis = DataInputStream(fis)
 	
-	val mapDataList = mutableListOf<MapData>()
+	val type: Type = object : TypeToken<ArrayList<T>?>() {}.type
 	val fileContents = dis.readBytes().toString(Charsets.UTF_8)
-	val mapDataArray = Gson().fromJson(fileContents, Array<MapData>::class.java)
-	mapDataArray.map { mapDataList.add(it) }
+	val result = Gson().fromJson<ArrayList<T>>(fileContents, type)
 	
 	fis.close()
 	dis.close()
 	
-	return mapDataList
+	return result
+}
+
+// TODO : 개별 함수로 바꿨는데, 제네릭으로 통합하기 ㅠㅠ
+fun readQuestDataStream(filename: String): ArrayList<QuestData>? {
+	val fis = FileInputStream(filename)
+	val dis = DataInputStream(fis)
+	
+	val type: Type = object : TypeToken<ArrayList<QuestData>?>() {}.type
+	val fileContents = dis.readBytes().toString(Charsets.UTF_8)
+	val result = Gson().fromJson<ArrayList<QuestData>>(fileContents, type)
+	
+	fis.close()
+	dis.close()
+	
+	return result
 }

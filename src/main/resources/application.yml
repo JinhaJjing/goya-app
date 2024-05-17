@@ -21,10 +21,10 @@ spring:
       path: '/h2-console'
       settings:
         web-allow-others: true
-  sql:
-    init:
-      mode: always
-      schema-locations: classpath:schema.sql
+#  sql:
+#    init:
+#      mode: always
+#      schema-locations: classpath:schema.sql
 server:
   port: 8888
   address: 0.0.0.0

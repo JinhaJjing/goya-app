@@ -33,7 +33,7 @@ class UserServiceTest @Autowired constructor(
     val request = UserCreateRequest("진하찡")
 
     // when
-    userService.saveUser(request)
+    userService.createUser(request)
 
     // then
     val results = userRepository.findAll()

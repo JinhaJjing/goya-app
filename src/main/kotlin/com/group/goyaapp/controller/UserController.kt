@@ -2,6 +2,7 @@ package com.group.goyaapp.controller
 
 import com.group.goyaapp.dto.request.user.UserCreateRequest
 import com.group.goyaapp.dto.request.user.UserRequest
+import com.group.goyaapp.dto.request.user.UserUpdateRequest
 import com.group.goyaapp.dto.response.UserResponse
 import com.group.goyaapp.service.UserService
 import org.springframework.web.bind.annotation.*
@@ -16,7 +17,15 @@ class UserController(
 		@RequestBody
 		request: UserCreateRequest
 	): UserResponse {
-		return userService.saveUser(request)
+		return userService.createUser(request)
+	}
+	
+	@PostMapping("/user/updateNickname")
+	fun updateUser(
+		@RequestBody
+		request: UserUpdateRequest
+	): UserResponse {
+		return userService.updateUser(request)
 	}
 	
 	@GetMapping("/userAll")
@@ -38,7 +47,9 @@ class UserController(
 		userUid: Int
 	) {
 		userService.deleteUser(userUid)
-	}/*
+	}
+	
+	/*
       @GetMapping("/user/loan")
       fun getUserLoanHistories(): List<UserLoanHistoryResponse> {
         return userService.getUserLoanHistories()

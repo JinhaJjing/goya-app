@@ -7,13 +7,17 @@ data class UserResponse(
 	val nickname: String,
 	val level: Int,
 	val exp: Int,
-	val savepoint: Int,
+	val savedMap: String,
 ) {
 	
 	companion object {
 		fun of(user: User): UserResponse {
 			return UserResponse(
-				userUid = user.id!!, nickname = user.nickname, level = user.level, exp = user.exp, savepoint = user.savepoint
+				userUid = user.id!!,
+				nickname = user.nickname,
+				level = user.level,
+				exp = user.exp,
+				savedMap = user.savedMap
 			)
 		}
 	}

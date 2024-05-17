@@ -14,8 +14,8 @@ class User constructor(
 	@Column(name = "exp")
 	var exp: Int = 0,
 	
-	@Column(name = "savepoint")
-	var savepoint: Int = 0,
+	@Column(name = "saved_map")
+	var savedMap: String = "Ma_0001",
 	
 	@OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
 	val userLoanHistories: MutableList<UserLoanHistory> = mutableListOf(),
@@ -30,8 +30,7 @@ class User constructor(
 		}
 		this.level = 0
 		this.exp = 0
-		this.savepoint = 0
-		println("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡUser 생성자")
+		this.savedMap = "Ma_0001"
 	}
 	
 	fun updateNickName(name: String) {

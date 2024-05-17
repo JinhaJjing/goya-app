@@ -3,6 +3,7 @@ package com.group.goyaapp.service
 import com.group.goyaapp.domain.User
 import com.group.goyaapp.dto.request.user.UserCreateRequest
 import com.group.goyaapp.dto.request.user.UserRequest
+import com.group.goyaapp.dto.request.user.UserUpdateRequest
 import com.group.goyaapp.dto.response.UserLoanHistoryResponse
 import com.group.goyaapp.dto.response.UserResponse
 import com.group.goyaapp.repository.UserRepository
@@ -15,10 +16,22 @@ class UserService(
 	private val userRepository: UserRepository,
 ) {
 	@Transactional
-	fun saveUser(request: UserCreateRequest): UserResponse {
+	fun createUser(request: UserCreateRequest): UserResponse {
 		val newUser = User(request.nickname)
-		// TODO 닉네임 유니크 체크
+		if (!checkNicknameUnique(request.nickname)) {
+			throw Exception("닉네임이 중복됩니다.")
+		}
 		return userRepository.save(newUser).let { UserResponse.of(it) }
+	}
+	
+	@Transactional
+	fun updateUser(request: UserUpdateRequest): UserResponse {
+		val curUser = userRepository.findById(request.userUid) ?: fail()
+		if (!checkNicknameUnique(request.nickname)) {
+			throw Exception("닉네임이 중복됩니다.")
+		}
+		curUser.nickname = request.nickname
+		return userRepository.save(curUser).let { UserResponse.of(it) }
 	}
 	
 	@Transactional(readOnly = true)
@@ -38,9 +51,14 @@ class UserService(
 		userRepository.delete(user)
 	}
 	
+	// NOT USED
 	@Transactional(readOnly = true)
 	fun getUserLoanHistories(): List<UserLoanHistoryResponse> {
 		return userRepository.findAllWithHistories().map(UserLoanHistoryResponse::of)
+	}
+	
+	fun checkNicknameUnique(nickname: String): Boolean {
+		return userRepository.findByNickname(nickname) == null
 	}
 	
 }
