@@ -1,10 +1,9 @@
-package com.group.goyaapp.service.account
+package com.group.goyaapp.service
 
 import com.group.goyaapp.domain.Account
 import com.group.goyaapp.dto.request.account.AccountCreateRequest
 import com.group.goyaapp.dto.request.account.AccountDeleteRequest
 import com.group.goyaapp.repository.AccountRepository
-import com.group.goyaapp.service.AccountService
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.DisplayName

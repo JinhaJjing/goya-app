@@ -1,4 +1,4 @@
-package com.group.goyaapp.service.user
+package com.group.goyaapp.service
 
 import com.group.goyaapp.domain.User
 import com.group.goyaapp.domain.UserLoanHistory
@@ -6,7 +6,6 @@ import com.group.goyaapp.domain.UserLoanStatus
 import com.group.goyaapp.dto.request.user.UserCreateRequest
 import com.group.goyaapp.repository.UserLoanHistoryRepository
 import com.group.goyaapp.repository.UserRepository
-import com.group.goyaapp.service.UserService
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.DisplayName

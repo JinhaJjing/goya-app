@@ -1,4 +1,4 @@
-package com.group.goyaapp.service.book
+package com.group.goyaapp.service
 
 import com.group.goyaapp.domain.Book
 import com.group.goyaapp.domain.User
@@ -12,7 +12,6 @@ import com.group.goyaapp.dto.response.BookStatResponse
 import com.group.goyaapp.repository.BookRepository
 import com.group.goyaapp.repository.UserLoanHistoryRepository
 import com.group.goyaapp.repository.UserRepository
-import com.group.goyaapp.service.BookService
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.DisplayName
