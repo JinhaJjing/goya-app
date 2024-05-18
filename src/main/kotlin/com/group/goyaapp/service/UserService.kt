@@ -30,7 +30,7 @@ class UserService(
 		if (!checkNicknameUnique(request.nickname)) {
 			throw Exception("닉네임이 중복됩니다.")
 		}
-		curUser.nickname = request.nickname
+		curUser.updateNickName(request.nickname)
 		return userRepository.save(curUser).let { UserResponse.of(it) }
 	}
 	
@@ -41,8 +41,8 @@ class UserService(
 	
 	@Transactional(readOnly = true)
 	fun getUser(request: UserRequest): UserResponse {
-		val user = userRepository.findById(request.user_uid)
-		return user.let { UserResponse.of(it!!) }
+		val user = userRepository.findById(request.userUid) ?: fail()
+		return user.let { UserResponse.of(it) }
 	}
 	
 	@Transactional

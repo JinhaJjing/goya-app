@@ -9,10 +9,10 @@ class User constructor(
 	var nickname: String,
 	
 	@Column(name = "level")
-	var level: Int = 0,
+	var level: Int = 0, // deprecated
 	
 	@Column(name = "exp")
-	var exp: Int = 0,
+	var exp: Int = 0, // deprecated
 	
 	@Column(name = "saved_map")
 	var savedMap: String = "Ma_0001",
