@@ -23,27 +23,23 @@ class QuestService(
 	@Transactional
 	fun acceptQuest(request: QuestAcceptRequest): QuestResponse {
 		val questData = readQuestDataStream("questData.json")!!.first { it.questId == request.quest_id }
-		val preQuestUserInfo = questRepository.findByUserUidAndQuestId(request.user_uid, questData.preQuest)
-		val quest = questRepository.findByUserUidAndQuestId(request.user_uid, request.quest_id) ?: Quest(
+		if (questData.preQuest != "x") {
+			val preQuestUserInfo = questRepository.findByUserUidAndQuestId(request.user_uid, questData.preQuest)
+			requireNotNull(preQuestUserInfo) { "선행 퀘스트 정보를 찾을 수 없습니다." }
+			require(preQuestUserInfo.state == QuestState.FINISHED) { "선행 퀘스트를 클리어하지 않았습니다." }
+		}
+		val curQuestUserInfo = questRepository.findByUserUidAndQuestId(request.user_uid, request.quest_id) ?: Quest(
 			request.user_uid, request.quest_id
 		)
+		val user = userRepository.findById(request.user_uid)
+		requireNotNull(user) { "유저 정보를 찾을 수 없습니다." }
+		require(user.curMap == questData.questMapId) { "퀘스트를 수락할 수 없는 맵입니다." }
+		require(curQuestUserInfo.state == QuestState.AVAILABLE) { "퀘스트를 수락할 수 없는 상태입니다." }
 		
-		// TODO :user 정보에 위치정보 map 추가
-		/*if(questData.questMapId != user.mapId)
-		{
-			// 현재 있는 맵과 다르면 실패
-			return
-		}*/
+		curQuestUserInfo.state = QuestState.ACCOMPLISHING
+		questRepository.save(curQuestUserInfo)
 		
-		requireNotNull(userRepository.findById(request.user_uid)) { "유저 정보를 찾을 수 없습니다." }
-		requireNotNull(quest) { "퀘스트 정보를 찾을 수 없습니다." }
-		require(preQuestUserInfo?.state == QuestState.FINISHED || questData.preQuest == "x") { "선행 퀘스트를 클리어하지 않았습니다." }
-		require(quest.state == QuestState.AVAILABLE) { "퀘스트를 수락할 수 없는 상태입니다." }
-		
-		quest.state = QuestState.ACCOMPLISHING
-		questRepository.save(quest)
-		
-		return QuestResponse.of(quest)
+		return QuestResponse.of(curQuestUserInfo)
 	}
 	
 	/**

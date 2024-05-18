@@ -14,8 +14,8 @@ class User constructor(
 	@Column(name = "exp")
 	var exp: Int = 0, // deprecated
 	
-	@Column(name = "saved_map")
-	var savedMap: String = "Ma_0001",
+	@Column(name = "cur_map")
+	var curMap: String = "Ma_0001",
 	
 	@OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
 	val userLoanHistories: MutableList<UserLoanHistory> = mutableListOf(),
@@ -30,13 +30,18 @@ class User constructor(
 		}
 		this.level = 0
 		this.exp = 0
-		this.savedMap = "Ma_0001"
+		this.curMap = "Ma_0001"
 	}
 	
 	fun updateNickName(name: String) {
 		this.nickname = name
 	}
 	
+	fun updateUserCurMap(map: String) {
+		this.curMap = map
+	}
+	
+	// deprecated
 	fun loanBook(book: Book) {
 		this.userLoanHistories.add(UserLoanHistory(this, book.name))
 	}

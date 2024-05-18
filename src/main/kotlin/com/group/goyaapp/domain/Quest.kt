@@ -14,7 +14,7 @@ class Quest(
 	var questId: String,
 	
 	@Enumerated(EnumType.STRING)
-	var state: QuestState = QuestState.NOT_AVAILABLE,
+	var state: QuestState = QuestState.AVAILABLE,
 	
 	@Column(name = "count")
 	var count: Int = 0,

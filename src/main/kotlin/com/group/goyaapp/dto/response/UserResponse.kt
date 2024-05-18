@@ -7,7 +7,7 @@ data class UserResponse(
 	val nickname: String,
 	val level: Int,
 	val exp: Int,
-	val savedMap: String,
+	val curMap: String,
 ) {
 	
 	companion object {
@@ -16,8 +16,7 @@ data class UserResponse(
 				userUid = user.id!!,
 				nickname = user.nickname,
 				level = user.level,
-				exp = user.exp,
-				savedMap = user.savedMap
+				exp = user.exp, curMap = user.curMap
 			)
 		}
 	}

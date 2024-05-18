@@ -48,11 +48,4 @@ class UserController(
 	) {
 		userService.deleteUser(userUid)
 	}
-	
-	/*
-      @GetMapping("/user/loan")
-      fun getUserLoanHistories(): List<UserLoanHistoryResponse> {
-        return userService.getUserLoanHistories()
-      }
-    */
 }

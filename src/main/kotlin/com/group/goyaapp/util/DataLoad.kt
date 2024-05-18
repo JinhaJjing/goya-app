@@ -167,3 +167,18 @@ fun readQuestDataStream(filename: String): ArrayList<QuestData>? {
 	
 	return result
 }
+
+// TODO : 개별 함수로 바꿨는데, 제네릭으로 통합하기 ㅠㅠ
+fun readMapDataStream(filename: String): ArrayList<MapData>? {
+	val fis = FileInputStream(filename)
+	val dis = DataInputStream(fis)
+	
+	val type: Type = object : TypeToken<ArrayList<MapData>?>() {}.type
+	val fileContents = dis.readBytes().toString(Charsets.UTF_8)
+	val result = Gson().fromJson<ArrayList<MapData>>(fileContents, type)
+	
+	fis.close()
+	dis.close()
+	
+	return result
+}

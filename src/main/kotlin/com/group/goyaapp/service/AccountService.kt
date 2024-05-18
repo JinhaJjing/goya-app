@@ -7,7 +7,6 @@ import com.group.goyaapp.dto.request.account.AccountUpdateRequest
 import com.group.goyaapp.dto.response.AccountResponse
 import com.group.goyaapp.repository.AccountRepository
 import com.group.goyaapp.util.fail
-import com.group.goyaapp.util.findByIdOrThrow
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
@@ -39,19 +38,20 @@ class AccountService(
 	}
 	
 	@Transactional
-	fun updateAccountLogin(request: AccountUpdateRequest): AccountResponse { // TODO 로그인으로 바꾸기
+	fun updateAccountLogin(request: AccountUpdateRequest): AccountResponse {
 		val account = accountRepository.findByAccountIdAndAccountPW(request.id, request.pw) ?: fail()
 		account.datetimeMod = LocalDateTime.now()
 		account.datetimeLastLogin = LocalDateTime.now()
+		accountRepository.save(account)
 		return accountRepository.findByAccountId(account.accountId).let { AccountResponse.of(it!!) }
 	}
 	
 	@Transactional
-	fun updateAccountLogout(request: AccountUpdateRequest): AccountResponse {
-		val account = accountRepository.findByIdOrThrow(request.id)
+	fun updateAccountLogout(request: AccountUpdateRequest) {
+		val account = accountRepository.findByAccountId(request.id) ?: fail()
 		account.datetimeMod = LocalDateTime.now()
 		account.datetimeLastLogin = LocalDateTime.now()
-		return accountRepository.findByAccountId(request.id).let { AccountResponse.of(it!!) }
+		accountRepository.save(account)
 	}
 	
 	@Transactional

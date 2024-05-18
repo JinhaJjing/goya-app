@@ -1,6 +1,7 @@
 package com.group.goyaapp.controller
 
 import com.group.goyaapp.dto.request.map.MapEnterRequest
+import com.group.goyaapp.dto.response.UserResponse
 import com.group.goyaapp.service.MapService
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -11,7 +12,10 @@ class MapController(
     private val mapService: MapService,
 ) {
     @PostMapping("/map/enter")
-    fun saveBook(@RequestBody request: MapEnterRequest) {
-        mapService.mapEnter(request)
+    fun saveBook(
+        @RequestBody
+        request: MapEnterRequest
+    ): UserResponse {
+        return mapService.mapEnter(request)
     }
 }

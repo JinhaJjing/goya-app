@@ -12,41 +12,44 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class AccountController(
-    private val accountService: AccountService,
+	private val accountService: AccountService,
 ) {
-
-    @PostMapping("/account/signup")
-    fun saveAccount(
-        @RequestBody
-        request: AccountCreateRequest
-    ) {
-        accountService.saveAccount(request)
-    }
-
-    @GetMapping("/account")
-    fun getAccountList(): List<AccountResponse> {
-        return accountService.getAccountAll()
-    }
-
-    @PostMapping("/account/withdrawal")
-    fun deleteAccount(
-        @RequestBody
-        request: AccountDeleteRequest
-    ) {
-        accountService.deleteAccount(request)
-    }
-
-    @PostMapping("/account/login")
-    fun login(
-        @RequestBody
-        request: AccountUpdateRequest
-    ): AccountResponse {
-        accountService.updateAccountLogin(request)
-        return accountService.getAccountInfo(request.id)
-    }
-
-    @PostMapping("/account/logout")
-    fun logout(@RequestBody request: AccountUpdateRequest) {
-        accountService.updateAccountLogout(request)
-    }
+	
+	@PostMapping("/account/signup")
+	fun saveAccount(
+		@RequestBody
+		request: AccountCreateRequest
+	) {
+		accountService.saveAccount(request)
+	}
+	
+	@GetMapping("/account")
+	fun getAccountList(): List<AccountResponse> {
+		return accountService.getAccountAll()
+	}
+	
+	@PostMapping("/account/withdrawal")
+	fun deleteAccount(
+		@RequestBody
+		request: AccountDeleteRequest
+	) {
+		accountService.deleteAccount(request)
+	}
+	
+	@PostMapping("/account/login")
+	fun login(
+		@RequestBody
+		request: AccountUpdateRequest
+	): AccountResponse {
+		accountService.updateAccountLogin(request)
+		return accountService.getAccountInfo(request.id)
+	}
+	
+	@PostMapping("/account/logout")
+	fun logout(
+		@RequestBody
+		request: AccountUpdateRequest
+	) {
+		accountService.updateAccountLogout(request)
+	}
 }
