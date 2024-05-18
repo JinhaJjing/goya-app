@@ -16,23 +16,33 @@ class AccountController(
 ) {
 
     @PostMapping("/account/signup")
-    fun saveUser(@RequestBody request: AccountCreateRequest) {
+    fun saveAccount(
+        @RequestBody
+        request: AccountCreateRequest
+    ) {
         accountService.saveAccount(request)
     }
 
     @GetMapping("/account")
-    fun getUsers(): List<AccountResponse> {
+    fun getAccountList(): List<AccountResponse> {
         return accountService.getAccountAll()
     }
 
     @PostMapping("/account/withdrawal")
-    fun deleteUser(@RequestBody request: AccountDeleteRequest) {
+    fun deleteAccount(
+        @RequestBody
+        request: AccountDeleteRequest
+    ) {
         accountService.deleteAccount(request)
     }
 
     @PostMapping("/account/login")
-    fun login(@RequestBody request: AccountUpdateRequest) {
+    fun login(
+        @RequestBody
+        request: AccountUpdateRequest
+    ): AccountResponse {
         accountService.updateAccountLogin(request)
+        return accountService.getAccountInfo(request.id)
     }
 
     @PostMapping("/account/logout")

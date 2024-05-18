@@ -18,13 +18,13 @@ class AccountService(
 ) {
 	
 	@Transactional
-	fun saveAccount(request: AccountCreateRequest) {
+	fun saveAccount(request: AccountCreateRequest): AccountResponse {
 		val newUser = Account(request.id, request.pw)
 		val account = accountRepository.findByAccountId(request.id)
 		if (account != null) fail()
 		newUser.datetimeAdd = LocalDateTime.now()
 		newUser.datetimeMod = LocalDateTime.now()
-		accountRepository.save(newUser)
+		return accountRepository.save(newUser).let { AccountResponse.of(it) }
 	}
 	
 	@Transactional(readOnly = true)
@@ -33,12 +33,17 @@ class AccountService(
 	}
 	
 	@Transactional
-	fun updateAccountLogin(request: AccountUpdateRequest): AccountResponse {
-		val account = accountRepository.findByIdOrThrow(request.id)
-		if (account.accountPW != request.pw) fail()
+	fun getAccountInfo(accountId: String): AccountResponse {
+		val a = accountRepository.findByAccountId(accountId) ?: fail()
+		return a.let { AccountResponse.of(it) }
+	}
+	
+	@Transactional
+	fun updateAccountLogin(request: AccountUpdateRequest): AccountResponse { // TODO 로그인으로 바꾸기
+		val account = accountRepository.findByAccountIdAndAccountPW(request.id, request.pw) ?: fail()
 		account.datetimeMod = LocalDateTime.now()
 		account.datetimeLastLogin = LocalDateTime.now()
-		return accountRepository.findByAccountId(request.id).let { AccountResponse.of(it!!) }
+		return accountRepository.findByAccountId(account.accountId).let { AccountResponse.of(it!!) }
 	}
 	
 	@Transactional
@@ -55,12 +60,5 @@ class AccountService(
 			request.id, request.pw
 		) ?: fail()
 		accountRepository.delete(account)
-	}/*
-        @Transactional(readOnly = true)
-        fun getUserLoanHistories(): List<UserLoanHistoryResponse> {
-            return accountRepository.findAllWithHistories()
-                .map(UserLoanHistoryResponse::of)
-        }
-    */
-	
+	}
 }
