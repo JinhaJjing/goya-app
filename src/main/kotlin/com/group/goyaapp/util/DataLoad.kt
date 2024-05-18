@@ -16,14 +16,7 @@ fun loadDataAll() {    // 맵 데이터
 	saveTestDataToFile("test.json", googleSheetDataLoad("sheet1"))
 	saveQuestDataToFile("questData.json", googleSheetDataLoad("Quest"))
 	saveMapDataToFile("mapData.json", googleSheetDataLoad("Map"))
-	
 	println("=========================서버 실행 완료=========================")
-	
-	// 데이터 파일 읽고 출력
-	// TODO 출력하지 말고 실제 비즈니스 로직에서 사용하기
-	//readDataStream<TestData>("test.json")
-	//readDataStream<QuestData>("questData.json")
-	//readDataStream<MapData>("mapData.json")
 }
 
 /**
@@ -136,49 +129,16 @@ fun writeDataFile(filename: String, dataList: Any) {
 	fos.close()
 }
 
-/**
- * 데이터 파일 읽기(공통?!)
- */
-fun <T> readDataStream(filename: String): ArrayList<T>? {
-	val fis = FileInputStream(filename)
-	val dis = DataInputStream(fis)
-	
-	val type: Type = object : TypeToken<ArrayList<T>?>() {}.type
-	val fileContents = dis.readBytes().toString(Charsets.UTF_8)
-	val result = Gson().fromJson<ArrayList<T>>(fileContents, type)
-	
-	fis.close()
-	dis.close()
-	
-	return result
-}
-
-// TODO : 개별 함수로 바꿨는데, 제네릭으로 통합하기 ㅠㅠ
-fun readQuestDataStream(filename: String): ArrayList<QuestData>? {
-	val fis = FileInputStream(filename)
-	val dis = DataInputStream(fis)
-	
-	val type: Type = object : TypeToken<ArrayList<QuestData>?>() {}.type
-	val fileContents = dis.readBytes().toString(Charsets.UTF_8)
-	val result = Gson().fromJson<ArrayList<QuestData>>(fileContents, type)
-	
-	fis.close()
-	dis.close()
-	
-	return result
-}
-
-// TODO : 개별 함수로 바꿨는데, 제네릭으로 통합하기 ㅠㅠ
-fun readMapDataStream(filename: String): ArrayList<MapData>? {
-	val fis = FileInputStream(filename)
-	val dis = DataInputStream(fis)
-	
-	val type: Type = object : TypeToken<ArrayList<MapData>?>() {}.type
-	val fileContents = dis.readBytes().toString(Charsets.UTF_8)
-	val result = Gson().fromJson<ArrayList<MapData>>(fileContents, type)
-	
-	fis.close()
-	dis.close()
-	
-	return result
+fun <T> readData(filename: String, typeToken: TypeToken<ArrayList<T>?>): ArrayList<T>? {
+	FileInputStream(filename).use { fis ->
+		DataInputStream(fis).use { dis ->
+			val type: Type = typeToken.type
+			val fileContents = dis.readBytes().toString(Charsets.UTF_8)
+			val list = Gson().fromJson<ArrayList<T>>(fileContents, type)
+			
+			fis.close()
+			dis.close()
+			return list
+		}
+	}
 }

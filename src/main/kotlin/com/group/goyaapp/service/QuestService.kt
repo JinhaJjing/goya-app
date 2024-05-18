@@ -1,14 +1,16 @@
 package com.group.goyaapp.service
 
+import com.google.common.reflect.TypeToken
 import com.group.goyaapp.domain.Quest
 import com.group.goyaapp.domain.enumType.QuestState
+import com.group.goyaapp.dto.data.QuestData
 import com.group.goyaapp.dto.request.quest.QuestAcceptRequest
 import com.group.goyaapp.dto.request.quest.QuestClearRequest
 import com.group.goyaapp.dto.request.quest.QuestLoadRequest
 import com.group.goyaapp.dto.response.QuestResponse
 import com.group.goyaapp.repository.QuestRepository
 import com.group.goyaapp.repository.UserRepository
-import com.group.goyaapp.util.readQuestDataStream
+import com.group.goyaapp.util.readData
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -22,7 +24,9 @@ class QuestService(
 	 */
 	@Transactional
 	fun acceptQuest(request: QuestAcceptRequest): QuestResponse {
-		val questData = readQuestDataStream("questData.json")!!.first { it.questId == request.questId }
+		val questDataList: ArrayList<QuestData>? =
+			readData("questData.json", object : TypeToken<ArrayList<QuestData>?>() {})
+		val questData = questDataList!!.first { it.questId == request.questId }
 		if (questData.preQuest != "x") {
 			val preQuestUserInfo = questRepository.findByUserUidAndQuestId(request.userUid, questData.preQuest)
 			requireNotNull(preQuestUserInfo) { "선행 퀘스트 정보를 찾을 수 없습니다." }
@@ -47,7 +51,9 @@ class QuestService(
 	 */
 	@Transactional
 	fun clearQuest(request: QuestClearRequest): QuestResponse {
-		val questData = readQuestDataStream("questData.json")!!.first { it.questId == request.questId }
+		val questDataList: ArrayList<QuestData>? =
+			readData("questData.json", object : TypeToken<ArrayList<QuestData>?>() {})
+		val questData = questDataList!!.first { it.questId == request.questId }
 		val curQuestUserInfo = questRepository.findByUserUidAndQuestId(request.userUid, request.questId)
 		requireNotNull(curQuestUserInfo) { "유저 퀘스트 수락 이력을 찾을 수 없습니다." }
 		require(curQuestUserInfo.state == QuestState.ACCOMPLISHING) { "퀘스트를 클리어할 수 없는 상태입니다." }
@@ -63,8 +69,9 @@ class QuestService(
 	 */
 	@Transactional
 	fun loadQuestList(request: QuestLoadRequest): List<QuestResponse> {
-		val questDataList = readQuestDataStream("questData.json")
 		val userQuestList = questRepository.findByUserUid(request.user_uid)
+		val questDataList: ArrayList<QuestData>? =
+			readData("questData.json", object : TypeToken<ArrayList<QuestData>?>() {})
 		return questDataList!!.map { questData ->
 			val quest = Quest(request.user_uid, questData.questId)
 			if (userQuestList != null) {
