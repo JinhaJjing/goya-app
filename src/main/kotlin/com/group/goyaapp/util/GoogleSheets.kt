@@ -48,6 +48,7 @@ fun googleSheetDataLoad(range: String): List<List<Any>> {
 			println("No data found.")
 		}
 		
+		println("Data load success.")
 		return values
 		
 	} catch (e: GoogleJsonResponseException) {

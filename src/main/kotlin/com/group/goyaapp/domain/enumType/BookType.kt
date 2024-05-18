@@ -1,4 +1,4 @@
-package com.group.goyaapp.domain
+package com.group.goyaapp.domain.enumType
 
 enum class BookType {
 	COMPUTER,

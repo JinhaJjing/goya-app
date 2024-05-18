@@ -1,6 +1,10 @@
 package com.group.goyaapp.service.book
 
-import com.group.goyaapp.domain.*
+import com.group.goyaapp.domain.Book
+import com.group.goyaapp.domain.User
+import com.group.goyaapp.domain.UserLoanHistory
+import com.group.goyaapp.domain.UserLoanStatus
+import com.group.goyaapp.domain.enumType.BookType
 import com.group.goyaapp.dto.request.book.BookLoanRequest
 import com.group.goyaapp.dto.request.book.BookRequest
 import com.group.goyaapp.dto.request.book.BookReturnRequest
@@ -52,8 +56,8 @@ class BookServiceTest @Autowired constructor(
   fun loanBookTest() {
     // given
     bookRepository.save(Book.fixture("이상한 나라의 엘리스"))
-    val savedUser = userRepository.save(User("최태현", null))
-    val request = BookLoanRequest("최태현", "이상한 나라의 엘리스")
+    val savedUser = userRepository.save(User("최태현", 0))
+    val request = BookLoanRequest(1, "이상한 나라의 엘리스")
 
     // when
     bookService.loanBook(request)
@@ -71,9 +75,9 @@ class BookServiceTest @Autowired constructor(
   fun loanBookFailTest() {
     // given
     bookRepository.save(Book.fixture("이상한 나라의 엘리스"))
-    val savedUser = userRepository.save(User("최태현", null))
+    val savedUser = userRepository.save(User("최태현", 0))
     userLoanHistoryRepository.save(UserLoanHistory.fixture(savedUser, "이상한 나라의 엘리스"))
-    val request = BookLoanRequest("최태현", "이상한 나라의 엘리스")
+    val request = BookLoanRequest(1, "이상한 나라의 엘리스")
 
     // when & then
     val message = assertThrows<IllegalArgumentException> {
@@ -86,9 +90,9 @@ class BookServiceTest @Autowired constructor(
   @DisplayName("책 반납이 정상 동작한다")
   fun returnBookTest() {
     // given
-    val savedUser = userRepository.save(User("최태현", null))
+    val savedUser = userRepository.save(User("최태현", 0))
     userLoanHistoryRepository.save(UserLoanHistory.fixture(savedUser, "이상한 나라의 엘리스"))
-    val request = BookReturnRequest("최태현", "이상한 나라의 엘리스")
+    val request = BookReturnRequest(1, "이상한 나라의 엘리스")
 
     // when
     bookService.returnBook(request)
@@ -103,7 +107,7 @@ class BookServiceTest @Autowired constructor(
   @DisplayName("책 대여 권수를 정상 확인한다")
   fun countLoanedBookTest() {
     // given
-    val savedUser = userRepository.save(User("최태현", null))
+    val savedUser = userRepository.save(User("최태현", 0))
     userLoanHistoryRepository.saveAll(listOf(
       UserLoanHistory.fixture(savedUser, "A"),
       UserLoanHistory.fixture(savedUser, "B", UserLoanStatus.RETURNED),

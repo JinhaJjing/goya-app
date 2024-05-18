@@ -1,10 +1,11 @@
 package com.group.goyaapp.domain
 
+import com.group.goyaapp.domain.enumType.QuestState
 import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
-class Quest constructor(
+class Quest(
 	
 	@Column(name = "user_uid")
 	var userUid: Int,

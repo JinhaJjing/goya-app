@@ -1,7 +1,7 @@
 package com.group.goyaapp.service
 
 import com.group.goyaapp.domain.Quest
-import com.group.goyaapp.domain.QuestState
+import com.group.goyaapp.domain.enumType.QuestState
 import com.group.goyaapp.dto.request.quest.QuestAcceptRequest
 import com.group.goyaapp.dto.request.quest.QuestClearRequest
 import com.group.goyaapp.dto.request.quest.QuestLoadRequest

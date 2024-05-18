@@ -1,5 +1,6 @@
 package com.group.goyaapp.domain
 
+import com.group.goyaapp.domain.enumType.BookType
 import javax.persistence.*
 
 @Entity

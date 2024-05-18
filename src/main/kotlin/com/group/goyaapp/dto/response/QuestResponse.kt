@@ -1,7 +1,7 @@
 package com.group.goyaapp.dto.response
 
 import com.group.goyaapp.domain.Quest
-import com.group.goyaapp.domain.QuestState
+import com.group.goyaapp.domain.enumType.QuestState
 
 data class QuestResponse(
 	val questId: String,
