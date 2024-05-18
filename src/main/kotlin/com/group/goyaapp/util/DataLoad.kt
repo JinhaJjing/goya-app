@@ -5,18 +5,26 @@ import com.google.gson.Gson
 import com.group.goyaapp.dto.data.MapData
 import com.group.goyaapp.dto.data.QuestData
 import com.group.goyaapp.dto.data.TestData
-import java.io.DataInputStream
-import java.io.DataOutputStream
-import java.io.FileInputStream
-import java.io.FileOutputStream
+import java.io.*
 import java.lang.reflect.Type
 
-
-fun loadDataAll() {    // 맵 데이터
-	saveTestDataToFile("test.json", googleSheetDataLoad("sheet1"))
-	saveQuestDataToFile("questData.json", googleSheetDataLoad("Quest"))
-	saveMapDataToFile("mapData.json", googleSheetDataLoad("Map"))
+fun loadDataAll() {
+	saveDataToFile("test.json", googleSheetDataLoad("sheet1"), TestData::class.java)
+	saveDataToFile("questData.json", googleSheetDataLoad("Quest"), QuestData::class.java)
+	saveDataToFile("mapData.json", googleSheetDataLoad("Map"), MapData::class.java)
 	println("=========================서버 실행 완료=========================")
+}
+
+fun <T> saveDataToFile(filename: String, data: Any, clazz: Class<T>) {
+	if (data is List<*>) {
+		val colList = data[0] as List<*>
+		val dataList = data.drop(1).map { row ->
+			val rowList = row as List<*>
+			clazz.constructors.first()
+				.newInstance(*colList.map { col -> rowList[colList.indexOf(col)].toString() }.toTypedArray())
+		}
+		File(filename).writeText(Gson().toJson(dataList))
+	}
 }
 
 /**
@@ -27,7 +35,7 @@ fun saveTestDataToFile(filename: String, data: Any) {
 		is List<*> -> {            // 이부분을 커스터마이징하여 사용
 			var colList: List<*> = listOf<String>()
 			val testDataList = mutableListOf<TestData>()
-			data.forEachIndexed() { idx, it ->
+			data.forEachIndexed { idx, it ->
 				if (idx == 0) {
 					colList = it as List<*>
 				}
