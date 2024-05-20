@@ -26,9 +26,9 @@ class QuestService(
 	fun acceptQuest(request: QuestAcceptRequest): QuestResponse {
 		val questDataList: ArrayList<QuestData>? =
 			readData("questData.json", object : TypeToken<ArrayList<QuestData>?>() {})
-		val questData = questDataList!!.first { it.questId == request.questId }
-		if (questData.preQuest != "x") {
-			val preQuestUserInfo = questRepository.findByUserUidAndQuestId(request.userUid, questData.preQuest)
+		val questData = questDataList!!.first { it.QuestID == request.questId }
+		if (questData.PreQuest != "x") {
+			val preQuestUserInfo = questRepository.findByUserUidAndQuestId(request.userUid, questData.PreQuest)
 			requireNotNull(preQuestUserInfo) { "선행 퀘스트 정보를 찾을 수 없습니다." }
 			require(preQuestUserInfo.state == QuestState.FINISHED) { "선행 퀘스트를 클리어하지 않았습니다." }
 		}
@@ -37,7 +37,7 @@ class QuestService(
 		)
 		val user = userRepository.findById(request.userUid)
 		requireNotNull(user) { "유저 정보를 찾을 수 없습니다." }
-		require(user.curMap == questData.questMapId) { "퀘스트를 수락할 수 없는 맵입니다." }
+		require(user.curMap == questData.QuestMapID) { "퀘스트를 수락할 수 없는 맵입니다." }
 		require(curQuestUserInfo.state == QuestState.AVAILABLE) { "퀘스트를 수락할 수 없는 상태입니다." }
 		
 		curQuestUserInfo.state = QuestState.ACCOMPLISHING
@@ -53,11 +53,11 @@ class QuestService(
 	fun clearQuest(request: QuestClearRequest): QuestResponse {
 		val questDataList: ArrayList<QuestData>? =
 			readData("questData.json", object : TypeToken<ArrayList<QuestData>?>() {})
-		val questData = questDataList!!.first { it.questId == request.questId }
+		val questData = questDataList!!.first { it.QuestID == request.questId }
 		val curQuestUserInfo = questRepository.findByUserUidAndQuestId(request.userUid, request.questId)
 		requireNotNull(curQuestUserInfo) { "유저 퀘스트 수락 이력을 찾을 수 없습니다." }
 		require(curQuestUserInfo.state == QuestState.ACCOMPLISHING) { "퀘스트를 클리어할 수 없는 상태입니다." }
-		require(curQuestUserInfo.count >= questData.missionCount) { "퀘스트 클리어 조건을 만족하지 못했습니다." }
+		require(curQuestUserInfo.count >= questData.MissionCount) { "퀘스트 클리어 조건을 만족하지 못했습니다." }
 		curQuestUserInfo.state = QuestState.FINISHED
 		questRepository.save(curQuestUserInfo)
 		
@@ -73,9 +73,9 @@ class QuestService(
 		val questDataList: ArrayList<QuestData>? =
 			readData("questData.json", object : TypeToken<ArrayList<QuestData>?>() {})
 		return questDataList!!.map { questData ->
-			val quest = Quest(request.user_uid, questData.questId)
+			val quest = Quest(request.user_uid, questData.QuestID)
 			if (userQuestList != null) {
-				val quest2 = userQuestList.filter { userQuest -> userQuest.questId == questData.questId }
+				val quest2 = userQuestList.filter { userQuest -> userQuest.questId == questData.QuestID }
 				if (quest2.isNotEmpty()) {
 					quest.state = quest2.first().state
 					quest.count = quest2.first().count

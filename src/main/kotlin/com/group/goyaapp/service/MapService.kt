@@ -21,8 +21,8 @@ class MapService(
 	@Transactional
 	fun mapEnter(request: MapEnterRequest): UserResponse {
 		val mapDataList: ArrayList<MapData>? = readData("mapData.json", object : TypeToken<ArrayList<MapData>?>() {})
-		val mapInfo = mapDataList!!.first { it.mapID == request.mapId }
-		val userQuestInfo = questRepository.findByUserUidAndQuestId(request.userUid, mapInfo.unlockCondition) ?: fail()
+		val mapInfo = mapDataList!!.first { it.MapID == request.mapId }
+		val userQuestInfo = questRepository.findByUserUidAndQuestId(request.userUid, mapInfo.UnlockCondition) ?: fail()
 		if (userQuestInfo.state != QuestState.FINISHED) fail()
 		val user = userRepository.findById(request.userUid) ?: fail()
 		user.updateUserCurMap(request.mapId)
