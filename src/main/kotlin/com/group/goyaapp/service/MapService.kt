@@ -8,7 +8,7 @@ import com.group.goyaapp.dto.response.UserResponse
 import com.group.goyaapp.repository.QuestRepository
 import com.group.goyaapp.repository.UserRepository
 import com.group.goyaapp.util.fail
-import com.group.goyaapp.util.readData
+import com.group.goyaapp.util.readDataFromFile
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -20,7 +20,8 @@ class MapService(
 	
 	@Transactional
 	fun mapEnter(request: MapEnterRequest): UserResponse {
-		val mapDataList: ArrayList<MapData>? = readData("mapData.json", object : TypeToken<ArrayList<MapData>?>() {})
+		val mapDataList: ArrayList<MapData>? =
+			readDataFromFile("mapData.json", object : TypeToken<ArrayList<MapData>?>() {})
 		val mapInfo = mapDataList!!.first { it.MapID == request.mapId }
 		val userQuestInfo = questRepository.findByUserUidAndQuestId(request.userUid, mapInfo.UnlockCondition) ?: fail()
 		if (userQuestInfo.state != QuestState.FINISHED) fail()

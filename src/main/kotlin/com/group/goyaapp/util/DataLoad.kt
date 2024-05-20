@@ -41,18 +41,15 @@ fun <T> saveDataToFile(filename: String, data: Any, clazz: Class<T>) {
 				dataList.add(obj as T)
 			}
 		}
-		writeDataFile(filename, dataList)
+		
+		FileOutputStream(filename).use { fos ->
+			val fileContents = Gson().toJson(dataList)
+			fos.write(fileContents.toByteArray())
+		}
 	}
 }
 
-fun writeDataFile(filename: String, dataList: Any) {
-	FileOutputStream(filename).use { fos ->
-		val fileContents = Gson().toJson(dataList)
-		fos.write(fileContents.toByteArray())
-	}
-}
-
-fun <T> readData(filename: String, typeToken: TypeToken<ArrayList<T>?>): ArrayList<T>? {
+fun <T> readDataFromFile(filename: String, typeToken: TypeToken<ArrayList<T>?>): ArrayList<T>? {
 	FileInputStream(filename).use { fis ->
 		DataInputStream(fis).use { dis ->
 			val type: Type = typeToken.type

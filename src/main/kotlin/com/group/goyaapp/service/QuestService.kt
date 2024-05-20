@@ -10,7 +10,7 @@ import com.group.goyaapp.dto.request.quest.QuestLoadRequest
 import com.group.goyaapp.dto.response.QuestResponse
 import com.group.goyaapp.repository.QuestRepository
 import com.group.goyaapp.repository.UserRepository
-import com.group.goyaapp.util.readData
+import com.group.goyaapp.util.readDataFromFile
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -25,7 +25,7 @@ class QuestService(
 	@Transactional
 	fun acceptQuest(request: QuestAcceptRequest): QuestResponse {
 		val questDataList: ArrayList<QuestData>? =
-			readData("questData.json", object : TypeToken<ArrayList<QuestData>?>() {})
+			readDataFromFile("questData.json", object : TypeToken<ArrayList<QuestData>?>() {})
 		val questData = questDataList!!.first { it.QuestID == request.questId }
 		if (questData.PreQuest != "x") {
 			val preQuestUserInfo = questRepository.findByUserUidAndQuestId(request.userUid, questData.PreQuest)
@@ -52,7 +52,7 @@ class QuestService(
 	@Transactional
 	fun clearQuest(request: QuestClearRequest): QuestResponse {
 		val questDataList: ArrayList<QuestData>? =
-			readData("questData.json", object : TypeToken<ArrayList<QuestData>?>() {})
+			readDataFromFile("questData.json", object : TypeToken<ArrayList<QuestData>?>() {})
 		val questData = questDataList!!.first { it.QuestID == request.questId }
 		val curQuestUserInfo = questRepository.findByUserUidAndQuestId(request.userUid, request.questId)
 		requireNotNull(curQuestUserInfo) { "유저 퀘스트 수락 이력을 찾을 수 없습니다." }
@@ -71,7 +71,7 @@ class QuestService(
 	fun loadQuestList(request: QuestLoadRequest): List<QuestResponse> {
 		val userQuestList = questRepository.findByUserUid(request.user_uid)
 		val questDataList: ArrayList<QuestData>? =
-			readData("questData.json", object : TypeToken<ArrayList<QuestData>?>() {})
+			readDataFromFile("questData.json", object : TypeToken<ArrayList<QuestData>?>() {})
 		return questDataList!!.map { questData ->
 			val quest = Quest(request.user_uid, questData.QuestID)
 			if (userQuestList != null) {
