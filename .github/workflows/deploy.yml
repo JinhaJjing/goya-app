@@ -6,7 +6,7 @@ on:
 name: Deploy String boot to Amazon EC2
 env:
   PROJECT_NAME: goya-app
-  S3_BUCKET_NAME: goya-s3-bucket
+  S3_BUCKET_NAME: goyabucket
   RESOURCE_PATH: ./src/main/resources/application.yml
   CODE_DEPLOY_APPLICATION_NAME: goya-code-deploy
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: goya-server
@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: 💌Set up JDK 17
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
           java-version: 17
 
@@ -30,8 +30,7 @@ jobs:
         with:
             files: ${{ env.RESOURCE_PATH }} 
         env:
-            override.value: ${{ secrets.DI_FROM_SECRET }} 
-            # override.value: 'from deploy.yaml' <-- 이렇게 사용해도 주입이 된다.
+            override.value: 'from deploy.yml'
 
       - name: ⭕Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -53,11 +52,11 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }} 
 
       - name: 🚛 Upload to S3
-        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://${{ secrets.S3_BUCKET_NAME }}/${{ env.S3_BUCKET_DIR_NAME }}/$GITHUB_SHA.zip
+        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://${{ secrets.S3_BUCKET_NAME }}/$GITHUB_SHA.zip
 
       - name: 🚀 Deploy to EC2 with CodeDeploy
         run: aws deploy create-deployment
           --application-name codedeploy-app
           --deployment-config-name CodeDeployDefault.AllAtOnce
           --deployment-group-name ${{ env.DEPLOYMENT_GROUP_NAME }}
-          --s3-location bucket=${{ secrets.S3_BUCKET_NAME }},bundleType=zip,key=${{ env.S3_BUCKET_DIR_NAME }}/$GITHUB_SHA.zip
+          --s3-location bucket=${{ secrets.S3_BUCKET_NAME }},bundleType=zip,key=$GITHUB_SHA.zip
