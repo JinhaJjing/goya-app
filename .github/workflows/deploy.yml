@@ -5,7 +5,6 @@ on:
 
 name: Deploy String boot to Amazon EC2
 env:
-  PROJECT_NAME: goya-app
   S3_BUCKET_NAME: goyabucket
   RESOURCE_PATH: ./src/main/resources/application.yml
   CODE_DEPLOY_APPLICATION_NAME: goya-code-deploy
@@ -56,7 +55,7 @@ jobs:
 
       - name: 🚀 Deploy to EC2 with CodeDeploy
         run: aws deploy create-deployment
-          --application-name codedeploy-app
+          --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }}
           --deployment-config-name CodeDeployDefault.AllAtOnce
-          --deployment-group-name ${{ env.DEPLOYMENT_GROUP_NAME }}
-          --s3-location bucket=${{ secrets.S3_BUCKET_NAME }},bundleType=zip,key=$GITHUB_SHA.zip
+          --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }}
+          --s3-location bucket=${{ env.S3_BUCKET_NAME }},bundleType=zip,key=$GITHUB_SHA.zip
