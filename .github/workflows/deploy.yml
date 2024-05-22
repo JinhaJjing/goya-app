@@ -26,12 +26,12 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
-      - name: 📗Set yaml file 
-        uses: microsoft/variable-substitution@v1
-        with:
-          files: ${{ env.RESOURCE_PATH }} 
-        env:
-          override.value: 'from deploy.yml'
+      #- name: 📗Set yaml file 
+      #  uses: microsoft/variable-substitution@v1
+      #  with:
+      #    files: ${{ env.RESOURCE_PATH }} 
+      #  env:
+      #    override.value: 'from deploy.yml'
 
       - name: ⭕Grant execute permission for gradlew
         run: chmod +x gradlew
