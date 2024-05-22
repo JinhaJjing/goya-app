@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source:  /
-    destination: /home/ec2-user/goyaapp-destination
+    destination: /home/ec2-user/goya-app
     overwrite: yes
 
 permissions:
@@ -10,3 +10,8 @@ permissions:
     pattern: "**"
     owner: ec2-user
     group: ec2-user
+
+hooks:
+  ApplicationStart:
+    - location: deploy.sh
+      timeout: 6000
