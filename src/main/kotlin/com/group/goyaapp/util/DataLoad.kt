@@ -10,10 +10,10 @@ import java.io.FileOutputStream
 import java.lang.reflect.Type
 
 
-fun loadDataAll() {    // 맵 데이터
+fun loadDataAll() {
 	saveDataToFile("questData.json", googleSheetDataLoad("Quest"), QuestData::class.java)
 	saveDataToFile("mapData.json", googleSheetDataLoad("Map"), MapData::class.java)
-	println("=========================서버 실행 완료=========================")
+	println("=========================기획 데이터 로드 완료=========================")
 }
 
 /**
