@@ -1,6 +1,6 @@
 package com.group.goyaapp.dto.request
 
-import javax.persistence.EnumType
+import jakarta.persistence.*
 
 data class InventoryUpdateRequest (
     val userUid: Long,

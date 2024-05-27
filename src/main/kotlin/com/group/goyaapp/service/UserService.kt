@@ -4,7 +4,6 @@ import com.group.goyaapp.domain.User
 import com.group.goyaapp.dto.request.user.UserCreateRequest
 import com.group.goyaapp.dto.request.user.UserRequest
 import com.group.goyaapp.dto.request.user.UserUpdateRequest
-import com.group.goyaapp.dto.response.UserLoanHistoryResponse
 import com.group.goyaapp.dto.response.UserResponse
 import com.group.goyaapp.repository.UserRepository
 import com.group.goyaapp.util.fail
@@ -49,12 +48,6 @@ class UserService(
 	fun deleteUser(userUid: Int) {
 		val user = userRepository.findById(userUid) ?: fail()
 		userRepository.delete(user)
-	}
-	
-	// NOT USED
-	@Transactional(readOnly = true)
-	fun getUserLoanHistories(): List<UserLoanHistoryResponse> {
-		return userRepository.findAllWithHistories().map(UserLoanHistoryResponse::of)
 	}
 	
 	fun checkNicknameUnique(nickname: String): Boolean {

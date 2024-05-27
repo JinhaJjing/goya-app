@@ -24,10 +24,7 @@ class Account(
 	@Id
 	@Column(name = "user_uid")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	val user_uid: Long? = null,
-	
-	//@OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
-	//val userLoanHistories: MutableList<UserLoanHistory> = mutableListOf(),
+	val userUid: Long? = null,
 ) {
 	
 	init {

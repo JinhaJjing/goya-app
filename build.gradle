@@ -23,10 +23,17 @@ dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-reflect:1.6.21'
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.13.3'
     implementation 'org.junit.jupiter:junit-jupiter:5.8.1'
-    implementation 'com.querydsl:querydsl-jpa:5.0.0'
-    implementation 'org.springdoc:springdoc-openapi-ui:1.6.15'
+    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
     implementation 'io.springfox:springfox-boot-starter:3.0.0'
-    kapt("com.querydsl:querydsl-apt:5.0.0:jpa")
+    // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.0.3'
+
+    // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-ui
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.7.0'
+
+    // https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-annotations
+    implementation 'io.swagger.core.v3:swagger-annotations:2.2.15'
+
     kapt("org.springframework.boot:spring-boot-configuration-processor")
     // https://mvnrepository.com/artifact/com.google.api-client/google-api-client
     implementation("com.google.api-client:google-api-client:1.25.0")
@@ -51,6 +58,8 @@ dependencies {
     runtimeOnly "org.springframework.boot:spring-boot-properties-migrator"
     runtimeOnly 'com.h2database:h2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    implementation 'org.hibernate:hibernate-validator:8.0.0.Final'
 }
 
 tasks.named('test') {

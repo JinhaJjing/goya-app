@@ -19,9 +19,6 @@ class Inventory(
 	@Column(name = "rid")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	val rid: Long? = null,
-	
-	//@OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
-	//val userLoanHistories: MutableList<UserLoanHistory> = mutableListOf(),
 ) {
 	@Column(name = "datetime_add")
 	var datetimeAdd: LocalDateTime? = LocalDateTime.now()

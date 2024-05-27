@@ -3,13 +3,10 @@ package com.group.goyaapp.controller
 import com.group.goyaapp.dto.request.book.BookLoanRequest
 import com.group.goyaapp.dto.request.book.BookRequest
 import com.group.goyaapp.dto.request.book.BookReturnRequest
-import com.group.goyaapp.dto.response.BookStatResponse
-import com.group.goyaapp.service.BookService
 import org.springframework.web.bind.annotation.*
 
 @RestController
 class BookController(
-	private val bookService: BookService,
 ) {
 	/*
 	@PostMapping("/book")

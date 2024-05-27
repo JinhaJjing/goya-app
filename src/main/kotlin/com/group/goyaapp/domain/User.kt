@@ -2,8 +2,9 @@ package com.group.goyaapp.domain
 
 import jakarta.persistence.*;
 
+@Table(name = "users")
 @Entity
-class User constructor(
+class User(
 	
 	@Column(name = "nickname")
 	var nickname: String,
@@ -16,9 +17,6 @@ class User constructor(
 	
 	@Column(name = "cur_map")
 	var curMap: String = "Ma_0001",
-	
-	@OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
-	val userLoanHistories: MutableList<UserLoanHistory> = mutableListOf(),
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,14 +39,4 @@ class User constructor(
 	fun updateUserCurMap(map: String) {
 		this.curMap = map
 	}
-	
-	// deprecated
-	fun loanBook(book: Book) {
-		this.userLoanHistories.add(UserLoanHistory(this, book.name))
-	}
-	
-	fun returnBook(bookName: String) {
-		this.userLoanHistories.first { history -> history.bookName == bookName }.doReturn()
-	}
-	
 }
