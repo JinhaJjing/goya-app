@@ -4,12 +4,14 @@ import com.group.goyaapp.domain.User
 import com.group.goyaapp.domain.UserLoanHistory
 import com.group.goyaapp.domain.UserLoanStatus
 import com.group.goyaapp.dto.request.user.UserCreateRequest
+import com.group.goyaapp.dto.request.user.UserUpdateRequest
 import com.group.goyaapp.repository.UserLoanHistoryRepository
 import com.group.goyaapp.repository.UserRepository
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
@@ -94,20 +96,106 @@ class UserServiceTest @Autowired constructor(
     userLoanHistoryRepository.saveAll(listOf(
       UserLoanHistory.fixture(savedUser, "책1", UserLoanStatus.LOANED),
       UserLoanHistory.fixture(savedUser, "책2", UserLoanStatus.LOANED),
-      UserLoanHistory.fixture(savedUser, "책3", UserLoanStatus.RETURNED),
-    ))
-
-    // when
-    val results = userService.getUserLoanHistories()
-
-    // then
-    assertThat(results).hasSize(1)
-    assertThat(results[0].name).isEqualTo("A")
-    assertThat(results[0].books).hasSize(3)
-    assertThat(results[0].books).extracting("name")
-      .containsExactlyInAnyOrder("책1", "책2", "책3")
-    assertThat(results[0].books).extracting("isReturn")
-      .containsExactlyInAnyOrder(false, false, true)
+	    UserLoanHistory.fixture(savedUser, "책3", UserLoanStatus.RETURNED),
+    )
+    )
+	
+	  // when
+	  val results = userService.getUserLoanHistories()
+	
+	  // then
+	  assertThat(results).hasSize(1)
+	  assertThat(results[0].name).isEqualTo("A")
+	  assertThat(results[0].books).hasSize(3)
+	  assertThat(results[0].books).extracting("name").containsExactlyInAnyOrder("책1", "책2", "책3")
+	  assertThat(results[0].books).extracting("isReturn").containsExactlyInAnyOrder(false, false, true)
   }
-
+	
+	@Test
+	@DisplayName("Create user with unique nickname")
+	fun shouldCreateUserWithUniqueNickname() {
+		// given
+		val request = UserCreateRequest("UniqueNick")
+		
+		// when
+		userService.createUser(request)
+		
+		// then
+		val savedUser = userRepository.findByNickname("UniqueNick")
+		assertThat(savedUser).isNotNull()
+	}
+	
+	@Test
+	@DisplayName("Fail to create user with duplicate nickname")
+	fun shouldFailToCreateUserWithDuplicateNickname() {
+		// given
+		userRepository.save(User("DuplicateNick"))
+		val request = UserCreateRequest("DuplicateNick")
+		
+		// when
+		val exception = assertThrows<Exception> {
+			userService.createUser(request)
+		}
+		
+		// then
+		assertThat(exception.message).isEqualTo("닉네임이 중복됩니다.")
+	}
+	
+	@Test
+	@DisplayName("Update user with unique nickname")
+	fun shouldUpdateUserWithUniqueNickname() {
+		// given
+		val savedUser = userRepository.save(User("OldNick"))
+		val request = UserUpdateRequest(savedUser.id!!, "NewNick")
+		
+		// when
+		userService.updateUser(request)
+		
+		// then
+		val updatedUser = userRepository.findById(savedUser.id!!)!!
+		assertThat(updatedUser.nickname).isEqualTo("NewNick")
+	}
+	
+	@Test
+	@DisplayName("Fail to update user with duplicate nickname")
+	fun shouldFailToUpdateUserWithDuplicateNickname() {
+		// given
+		userRepository.save(User("ExistingNick"))
+		val savedUser = userRepository.save(User("OldNick"))
+		val request = UserUpdateRequest(savedUser.id!!, "ExistingNick")
+		
+		// when
+		val exception = assertThrows<Exception> {
+			userService.updateUser(request)
+		}
+		
+		// then
+		assertThat(exception.message).isEqualTo("닉네임이 중복됩니다.")
+	}
+	
+	@Test
+	@DisplayName("Delete existing user")
+	fun shouldDeleteExistingUser() {
+		// given
+		val savedUser = userRepository.save(User("ToBeDeleted"))
+		
+		// when
+		userService.deleteUser(savedUser.id!!)
+		
+		// then
+		assertThat(userRepository.findById(savedUser.id!!)).isNull()
+	}
+	
+	@Test
+	@DisplayName("Fail to delete non-existing user")
+	fun shouldFailToDeleteNonExistingUser() {
+		// when
+		val exception = assertThrows<Exception> {
+			userService.deleteUser(9999)
+		}
+		
+		// then
+		assertThat(exception.message).isEqualTo("유저를 찾을 수 없습니다.")
+	}
+	
 }

@@ -1,6 +1,6 @@
 package com.group.goyaapp.domain
 
-import javax.persistence.*
+import jakarta.persistence.*;
 
 @Entity
 class UserLoanHistory(

@@ -1,6 +1,6 @@
 package com.group.goyaapp.domain
 
-import javax.persistence.*
+import jakarta.persistence.*;
 
 @Entity
 class User constructor(
@@ -24,6 +24,7 @@ class User constructor(
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	val id: Int? = null,
 ) {
+	
 	init {
 		if (nickname.isBlank()) {
 			throw IllegalArgumentException("닉네임은 비어 있을 수 없습니다")

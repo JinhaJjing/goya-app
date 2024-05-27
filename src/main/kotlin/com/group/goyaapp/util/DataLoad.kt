@@ -4,11 +4,9 @@ import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 import com.group.goyaapp.dto.data.MapData
 import com.group.goyaapp.dto.data.QuestData
-import java.io.DataInputStream
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.lang.reflect.Type
-
 
 fun loadDataAll() {
 	saveDataToFile("questData.json", googleSheetDataLoad("Quest"), QuestData::class.java)
@@ -16,9 +14,6 @@ fun loadDataAll() {
 	println("=========================기획 데이터 로드 완료=========================")
 }
 
-/**
- * 퀘스트 기획데이터 저장
- */
 fun <T> saveDataToFile(filename: String, data: Any, clazz: Class<T>) {
 	if (data is List<*>) {
 		var colList: List<*> = listOf<String>()
@@ -51,14 +46,8 @@ fun <T> saveDataToFile(filename: String, data: Any, clazz: Class<T>) {
 
 fun <T> readDataFromFile(filename: String, typeToken: TypeToken<ArrayList<T>?>): ArrayList<T>? {
 	FileInputStream(filename).use { fis ->
-		DataInputStream(fis).use { dis ->
-			val type: Type = typeToken.type
-			val fileContents = dis.readBytes().toString(Charsets.UTF_8)
-			val list = Gson().fromJson<ArrayList<T>>(fileContents, type)
-			
-			fis.close()
-			dis.close()
-			return list
-		}
+		val type: Type = typeToken.type
+		val fileContents = fis.readBytes().toString(Charsets.UTF_8)
+		return Gson().fromJson<ArrayList<T>>(fileContents, type)
 	}
 }

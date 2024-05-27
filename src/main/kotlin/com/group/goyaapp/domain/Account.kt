@@ -1,7 +1,7 @@
 package com.group.goyaapp.domain
 
+import jakarta.persistence.*
 import java.time.LocalDateTime
-import javax.persistence.*
 
 @Entity
 class Account(

@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '2.6.8'
+    id 'org.springframework.boot' version '3.0.1'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
     id 'org.jetbrains.kotlin.jvm' version '1.6.21'
@@ -10,7 +10,7 @@ plugins {
 
 group = 'com.group'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = '17'
 
 repositories {
     mavenCentral()
@@ -48,6 +48,7 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.8.6'
 
+    runtimeOnly "org.springframework.boot:spring-boot-properties-migrator"
     runtimeOnly 'com.h2database:h2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
@@ -58,12 +59,12 @@ tasks.named('test') {
 
 compileKotlin {
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
 }
 
 compileTestKotlin {
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
 }
