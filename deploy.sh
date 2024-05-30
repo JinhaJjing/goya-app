@@ -28,6 +28,6 @@ fi
 
 DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
 echo "> DEPLOY_JAR 배포" >> $DEPLOY_LOG_PATH
-nohup java -jar DEPLOY_JAR --spring.profiles.active=dev >> $APPLICATION_LOG_PATH 2> $DEPLOY_ERR_LOG_PATH &
+nohup java -jar $DEPLOY_JAR --spring.profiles.active=dev >> $APPLICATION_LOG_PATH 2> $DEPLOY_ERR_LOG_PATH &
 
 echo "==== 배포 종료 : $(date +%c) ====" >> $DEPLOY_LOG_PATH
