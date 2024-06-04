@@ -12,7 +12,7 @@ class MapController(
     private val mapService: MapService,
 ) {
     @PostMapping("/map/enter")
-    fun saveBook(
+    fun mapEnter(
         @RequestBody
         request: MapEnterRequest
     ): UserResponse {
