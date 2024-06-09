@@ -29,5 +29,5 @@ class Quest(
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	val rid: Int? = null,
 ) {
-	
+	constructor() : this(0, "")
 }

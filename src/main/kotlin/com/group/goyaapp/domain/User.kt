@@ -22,11 +22,14 @@ class User(
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	val id: Int? = null,
 ) {
+	constructor() : this("")
 	
 	init {
+		/*
 		if (nickname.isBlank()) {
 			throw IllegalArgumentException("닉네임은 비어 있을 수 없습니다")
-		}
+		}*/
+		this.nickname = ""
 		this.level = 0
 		this.exp = 0
 		this.curMap = "Ma_0001"

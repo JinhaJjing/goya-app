@@ -3,6 +3,9 @@ package com.group.goyaapp.controller
 import com.group.goyaapp.dto.request.user.UserCreateRequest
 import com.group.goyaapp.dto.request.user.UserRequest
 import com.group.goyaapp.dto.request.user.UserUpdateRequest
+import com.group.goyaapp.dto.response.DefaultRes
+import com.group.goyaapp.dto.response.ResponseMessage
+import com.group.goyaapp.dto.response.StatusCode
 import com.group.goyaapp.dto.response.UserResponse
 import com.group.goyaapp.service.UserService
 import org.springframework.web.bind.annotation.*
@@ -16,36 +19,61 @@ class UserController(
 	fun saveUser(
 		@RequestBody
 		request: UserCreateRequest
-	): UserResponse {
-		return userService.createUser(request)
+	): DefaultRes<out Any> {
+		try {
+			val result = userService.createUser(request)
+			return DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATE_USER_SUCCESS, result)
+		} catch (e: Exception) {
+			return DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.CREATE_USER_FAIL, e.message)
+		}
 	}
 	
 	@PostMapping("/user/updateNickname")
 	fun updateUser(
 		@RequestBody
 		request: UserUpdateRequest
-	): UserResponse {
-		return userService.updateUser(request)
+	): DefaultRes<out Any> {
+		try {
+			val result = userService.updateUser(request)
+			return DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATE_USER_SUCCESS, result)
+		} catch (e: Exception) {
+			return DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.CREATE_USER_FAIL, e.message)
+		}
 	}
 	
 	@GetMapping("/userAll")
-	fun getUsers(): List<UserResponse> {
-		return userService.getUserAll()
+	fun getUsers(): DefaultRes<out Any> {
+		try {
+			val result = userService.getUserAll()
+			return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_USER_SUCCESS, result)
+		} catch (e: Exception) {
+			return DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_USER, e.message)
+		}
 	}
 	
 	@PostMapping("/user/info")
 	fun getUsers(
 		@RequestBody
 		request: UserRequest
-	): UserResponse {
-		return userService.getUser(request)
+	): DefaultRes<out Any> {
+		try {
+			val result = userService.getUser(request)
+			return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_USER_SUCCESS, result)
+		} catch (e: Exception) {
+			return DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_USER, e.message)
+		}
 	}
 	
 	@DeleteMapping("/user/delete")
 	fun deleteUser(
 		@RequestParam
 		userUid: Int
-	) {
-		userService.deleteUser(userUid)
+	): DefaultRes<out Any> {
+		try {
+			val result = userService.deleteUser(userUid)
+			return DefaultRes.res(StatusCode.OK, ResponseMessage.DELETE_USER_SUCCESS, result)
+		} catch (e: Exception) {
+			return DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.DELETE_USER_FAIL, e.message)
+		}
 	}
 }

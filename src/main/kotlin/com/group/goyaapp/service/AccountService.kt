@@ -6,7 +6,7 @@ import com.group.goyaapp.dto.request.account.AccountDeleteRequest
 import com.group.goyaapp.dto.request.account.AccountUpdateRequest
 import com.group.goyaapp.dto.response.AccountResponse
 import com.group.goyaapp.repository.AccountRepository
-import com.group.goyaapp.util.fail
+import com.group.goyaapp.util.failInputArgument
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
@@ -18,9 +18,10 @@ class AccountService(
 	
 	@Transactional
 	fun saveAccount(request: AccountCreateRequest): AccountResponse {
+		if (request.id.isBlank() || request.pw.isBlank()) throw Exception("아이디와 비밀번호를 입력해주세요.")
 		val newUser = Account(request.id, request.pw)
 		val account = accountRepository.findByAccountId(request.id)
-		if (account != null) fail()
+		if (account != null) failInputArgument()
 		newUser.datetimeAdd = LocalDateTime.now()
 		newUser.datetimeMod = LocalDateTime.now()
 		return accountRepository.save(newUser).let { AccountResponse.of(it) }
@@ -33,13 +34,13 @@ class AccountService(
 	
 	@Transactional
 	fun getAccountInfo(accountId: String): AccountResponse {
-		val a = accountRepository.findByAccountId(accountId) ?: fail()
+		val a = accountRepository.findByAccountId(accountId) ?: throw Exception("계정이 존재하지 않습니다.")
 		return a.let { AccountResponse.of(it) }
 	}
 	
 	@Transactional
 	fun updateAccountLogin(request: AccountUpdateRequest): AccountResponse {
-		val account = accountRepository.findByAccountIdAndAccountPW(request.id, request.pw) ?: fail()
+		val account = accountRepository.findByAccountIdAndAccountPW(request.id, request.pw) ?: throw Exception("계정이 존재하지 않습니다.")
 		account.datetimeMod = LocalDateTime.now()
 		account.datetimeLastLogin = LocalDateTime.now()
 		accountRepository.save(account)
@@ -47,8 +48,8 @@ class AccountService(
 	}
 	
 	@Transactional
-	fun updateAccountLogout(request: AccountUpdateRequest) {
-		val account = accountRepository.findByAccountId(request.id) ?: fail()
+	fun updateAccountLogout(request: AccountUpdateRequest){
+		val account = accountRepository.findByAccountId(request.id) ?: throw Exception("계정이 존재하지 않습니다.")
 		account.datetimeMod = LocalDateTime.now()
 		account.datetimeLastLogin = LocalDateTime.now()
 		accountRepository.save(account)
@@ -58,7 +59,7 @@ class AccountService(
 	fun deleteAccount(request: AccountDeleteRequest) {
 		val account = accountRepository.findByAccountIdAndAccountPW(
 			request.id, request.pw
-		) ?: fail()
+		) ?: throw Exception("계정이 존재하지 않습니다.")
 		accountRepository.delete(account)
 	}
 }

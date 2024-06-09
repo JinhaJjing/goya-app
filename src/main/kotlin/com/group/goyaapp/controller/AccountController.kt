@@ -4,6 +4,9 @@ import com.group.goyaapp.dto.request.account.AccountCreateRequest
 import com.group.goyaapp.dto.request.account.AccountDeleteRequest
 import com.group.goyaapp.dto.request.account.AccountUpdateRequest
 import com.group.goyaapp.dto.response.AccountResponse
+import com.group.goyaapp.dto.response.DefaultRes
+import com.group.goyaapp.dto.response.ResponseMessage
+import com.group.goyaapp.dto.response.StatusCode
 import com.group.goyaapp.service.AccountService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -14,42 +17,61 @@ import org.springframework.web.bind.annotation.RestController
 class AccountController(
 	private val accountService: AccountService,
 ) {
-	
 	@PostMapping("/account/signup")
 	fun saveAccount(
 		@RequestBody
 		request: AccountCreateRequest
-	) {
-		accountService.saveAccount(request)
+	): DefaultRes<out Any> {
+		try {
+			val result = accountService.saveAccount(request)
+			return DefaultRes.res(StatusCode.CREATED, ResponseMessage.SIGNUP_SUCCESS, result)
+		} catch (e: Exception) {
+			return DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.SIGNUP_FAIL, e.message)
+		}
 	}
 	
 	@GetMapping("/account")
-	fun getAccountList(): List<AccountResponse> {
-		return accountService.getAccountAll()
+	fun getAccountList(): DefaultRes<List<AccountResponse>> {
+		val result = accountService.getAccountAll()
+		return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_ACCOUNT_SUCCESS, result)
 	}
 	
 	@PostMapping("/account/withdrawal")
 	fun deleteAccount(
 		@RequestBody
 		request: AccountDeleteRequest
-	) {
-		accountService.deleteAccount(request)
+	): DefaultRes<out String> {
+		try {
+			accountService.deleteAccount(request)
+			return DefaultRes.res(StatusCode.OK, ResponseMessage.DELETE_ACCOUNT_SUCCESS, "")
+		} catch (e: Exception) {
+			return DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.DELETE_ACCOUNT_FAIL, e.message)
+		}
 	}
 	
 	@PostMapping("/account/login")
 	fun login(
 		@RequestBody
 		request: AccountUpdateRequest
-	): AccountResponse {
-		accountService.updateAccountLogin(request)
-		return accountService.getAccountInfo(request.id)
+	): DefaultRes<out Any> {
+		try {
+			accountService.updateAccountLogin(request)
+			return DefaultRes.res(StatusCode.OK, ResponseMessage.LOGIN_SUCCESS, "")
+		} catch (e: Exception) {
+			return DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.LOGIN_FAIL, e.message)
+		}
 	}
 	
 	@PostMapping("/account/logout")
 	fun logout(
 		@RequestBody
 		request: AccountUpdateRequest
-	) {
-		accountService.updateAccountLogout(request)
+	): DefaultRes<out String> {
+		try {
+			accountService.updateAccountLogout(request)
+			return DefaultRes.res(StatusCode.OK, ResponseMessage.LOGOUT_SUCCESS, "")
+		} catch (e: Exception) {
+			return DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.LOGOUT_FAIL, e.message)
+		}
 	}
 }

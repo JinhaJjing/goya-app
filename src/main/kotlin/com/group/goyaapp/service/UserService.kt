@@ -6,7 +6,7 @@ import com.group.goyaapp.dto.request.user.UserRequest
 import com.group.goyaapp.dto.request.user.UserUpdateRequest
 import com.group.goyaapp.dto.response.UserResponse
 import com.group.goyaapp.repository.UserRepository
-import com.group.goyaapp.util.fail
+import com.group.goyaapp.util.failInputArgument
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -25,7 +25,7 @@ class UserService(
 	
 	@Transactional
 	fun updateUser(request: UserUpdateRequest): UserResponse {
-		val curUser = userRepository.findById(request.userUid) ?: fail()
+		val curUser = userRepository.findById(request.userUid) ?: throw Exception("해당 유저가 존재하지 않습니다.")
 		if (!checkNicknameUnique(request.nickname)) {
 			throw Exception("닉네임이 중복됩니다.")
 		}
@@ -40,13 +40,13 @@ class UserService(
 	
 	@Transactional(readOnly = true)
 	fun getUser(request: UserRequest): UserResponse {
-		val user = userRepository.findById(request.userUid) ?: fail()
+		val user = userRepository.findById(request.userUid) ?: throw Exception("해당 유저가 존재하지 않습니다.")
 		return user.let { UserResponse.of(it) }
 	}
 	
 	@Transactional
 	fun deleteUser(userUid: Int) {
-		val user = userRepository.findById(userUid) ?: fail()
+		val user = userRepository.findById(userUid) ?: throw Exception("해당 유저가 존재하지 않습니다.")
 		userRepository.delete(user)
 	}
 	

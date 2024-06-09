@@ -5,7 +5,6 @@ import java.time.LocalDateTime
 
 @Entity
 class Account(
-	
 	@Column(name = "id", unique = true)
 	var accountId: String,
 	
@@ -26,13 +25,5 @@ class Account(
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	val userUid: Long? = null,
 ) {
-	
-	init {
-		if (accountId.isBlank()) {
-			throw IllegalArgumentException("이름은 비어 있을 수 없습니다")
-		}
-		if (accountPW.isBlank()) {
-			throw IllegalArgumentException("비밀번호는 비어 있을 수 없습니다")
-		}
-	}
+	constructor() : this("", "")
 }
