@@ -2,6 +2,7 @@ package com.group.goyaapp.controller
 
 import com.group.goyaapp.dto.request.account.AccountCreateRequest
 import com.group.goyaapp.dto.request.account.AccountDeleteRequest
+import com.group.goyaapp.dto.request.account.AccountLogoutRequest
 import com.group.goyaapp.dto.request.account.AccountUpdateRequest
 import com.group.goyaapp.dto.response.AccountResponse
 import com.group.goyaapp.dto.response.DefaultRes
@@ -26,7 +27,7 @@ class AccountController(
 			val result = accountService.saveAccount(request)
 			return DefaultRes.res(StatusCode.CREATED, ResponseMessage.SIGNUP_SUCCESS, result)
 		} catch (e: Exception) {
-			return DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.SIGNUP_FAIL, e.message)
+			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message, "")
 		}
 	}
 	
@@ -45,7 +46,7 @@ class AccountController(
 			accountService.deleteAccount(request)
 			return DefaultRes.res(StatusCode.OK, ResponseMessage.DELETE_ACCOUNT_SUCCESS, "")
 		} catch (e: Exception) {
-			return DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.DELETE_ACCOUNT_FAIL, e.message)
+			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message, "")
 		}
 	}
 	
@@ -55,23 +56,23 @@ class AccountController(
 		request: AccountUpdateRequest
 	): DefaultRes<out Any> {
 		try {
-			accountService.updateAccountLogin(request)
-			return DefaultRes.res(StatusCode.OK, ResponseMessage.LOGIN_SUCCESS, "")
+			val result = accountService.updateAccountLogin(request)
+			return DefaultRes.res(StatusCode.OK, ResponseMessage.LOGIN_SUCCESS, result)
 		} catch (e: Exception) {
-			return DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.LOGIN_FAIL, e.message)
+			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message, "")
 		}
 	}
 	
 	@PostMapping("/account/logout")
 	fun logout(
 		@RequestBody
-		request: AccountUpdateRequest
-	): DefaultRes<out String> {
+		request: AccountLogoutRequest
+	): DefaultRes<out Any> {
 		try {
-			accountService.updateAccountLogout(request)
-			return DefaultRes.res(StatusCode.OK, ResponseMessage.LOGOUT_SUCCESS, "")
+			val result = accountService.updateAccountLogout(request)
+			return DefaultRes.res(StatusCode.OK, ResponseMessage.LOGOUT_SUCCESS, result)
 		} catch (e: Exception) {
-			return DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.LOGOUT_FAIL, e.message)
+			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message, "")
 		}
 	}
 }

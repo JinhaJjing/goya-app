@@ -7,7 +7,6 @@ import com.group.goyaapp.dto.request.map.MapEnterRequest
 import com.group.goyaapp.dto.response.UserResponse
 import com.group.goyaapp.repository.QuestRepository
 import com.group.goyaapp.repository.UserRepository
-import com.group.goyaapp.util.failInputArgument
 import com.group.goyaapp.util.readDataFromFile
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -23,9 +22,11 @@ class MapService(
 		val mapDataList: ArrayList<MapData>? =
 			readDataFromFile("mapData.json", object : TypeToken<ArrayList<MapData>?>() {})
 		val mapInfo = mapDataList!!.first { it.MapID == request.mapId }
-		val userQuestInfo = questRepository.findByUserUidAndQuestId(request.userUid, mapInfo.UnlockCondition) ?: failInputArgument()
-		if (userQuestInfo.state != QuestState.FINISHED) failInputArgument()
-		val user = userRepository.findById(request.userUid) ?: failInputArgument()
+		val userQuestInfo =
+			questRepository.findByUserUidAndQuestId(request.userUid, mapInfo.UnlockCondition)
+			?: throw Exception("퀘스트 정보가 없습니다.")
+		if (userQuestInfo.state != QuestState.FINISHED) throw Exception("맵이 열려있지 않습니다.")
+		val user = userRepository.findById(request.userUid) ?: throw Exception("해당 유저가 존재하지 않습니다.")
 		user.updateUserCurMap(request.mapId)
 		return userRepository.save(user).let { UserResponse.of(it) }
 	}

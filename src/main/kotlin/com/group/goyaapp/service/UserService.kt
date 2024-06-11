@@ -6,7 +6,6 @@ import com.group.goyaapp.dto.request.user.UserRequest
 import com.group.goyaapp.dto.request.user.UserUpdateRequest
 import com.group.goyaapp.dto.response.UserResponse
 import com.group.goyaapp.repository.UserRepository
-import com.group.goyaapp.util.failInputArgument
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
