@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 class Quest(
 	
 	@Column(name = "user_uid")
-	var userUid: Int,
+	var userUid: Long,
 	
 	@Column(name = "quest_id")
 	var questId: String,
@@ -27,7 +27,7 @@ class Quest(
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	val rid: Int? = null,
+	val rid: Long? = null,
 ) {
 	constructor() : this(0, "")
 }

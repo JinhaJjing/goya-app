@@ -26,7 +26,7 @@ class MapService(
 			questRepository.findByUserUidAndQuestId(request.userUid, mapInfo.UnlockCondition)
 			?: throw Exception("퀘스트 정보가 없습니다.")
 		if (userQuestInfo.state != QuestState.FINISHED) throw Exception("맵이 열려있지 않습니다.")
-		val user = userRepository.findById(request.userUid) ?: throw Exception("해당 유저가 존재하지 않습니다.")
+		val user = userRepository.findByUserUid(request.userUid) ?: throw Exception("해당 유저가 존재하지 않습니다.")
 		user.updateUserCurMap(request.mapId)
 		return userRepository.save(user).let { UserResponse.of(it) }
 	}

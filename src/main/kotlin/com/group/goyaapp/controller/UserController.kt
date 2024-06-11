@@ -6,7 +6,6 @@ import com.group.goyaapp.dto.request.user.UserUpdateRequest
 import com.group.goyaapp.dto.response.DefaultRes
 import com.group.goyaapp.dto.response.ResponseMessage
 import com.group.goyaapp.dto.response.StatusCode
-import com.group.goyaapp.dto.response.UserResponse
 import com.group.goyaapp.service.UserService
 import org.springframework.web.bind.annotation.*
 
@@ -24,7 +23,7 @@ class UserController(
 			val result = userService.createUser(request)
 			return DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATE_USER_SUCCESS, result)
 		} catch (e: Exception) {
-			return DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.CREATE_USER_FAIL, e.message)
+			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message)
 		}
 	}
 	
@@ -34,10 +33,10 @@ class UserController(
 		request: UserUpdateRequest
 	): DefaultRes<out Any> {
 		try {
-			val result = userService.updateUser(request)
-			return DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATE_USER_SUCCESS, result)
+			val result = userService.updateNickname(request)
+			return DefaultRes.res(StatusCode.OK, ResponseMessage.UPDATE_USER, result)
 		} catch (e: Exception) {
-			return DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.CREATE_USER_FAIL, e.message)
+			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message)
 		}
 	}
 	
@@ -47,7 +46,7 @@ class UserController(
 			val result = userService.getUserAll()
 			return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_USER_SUCCESS, result)
 		} catch (e: Exception) {
-			return DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_USER, e.message)
+			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message)
 		}
 	}
 	
@@ -60,20 +59,20 @@ class UserController(
 			val result = userService.getUser(request)
 			return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_USER_SUCCESS, result)
 		} catch (e: Exception) {
-			return DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.NOT_FOUND_USER, e.message)
+			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message)
 		}
 	}
 	
 	@DeleteMapping("/user/delete")
 	fun deleteUser(
-		@RequestParam
-		userUid: Int
+		@RequestBody
+		request: UserRequest
 	): DefaultRes<out Any> {
 		try {
-			val result = userService.deleteUser(userUid)
+			val result = userService.deleteUser(request.userUid)
 			return DefaultRes.res(StatusCode.OK, ResponseMessage.DELETE_USER_SUCCESS, result)
 		} catch (e: Exception) {
-			return DefaultRes.res(StatusCode.BAD_REQUEST, ResponseMessage.DELETE_USER_FAIL, e.message)
+			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message)
 		}
 	}
 }

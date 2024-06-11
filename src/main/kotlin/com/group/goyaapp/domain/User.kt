@@ -5,9 +5,11 @@ import jakarta.persistence.*;
 @Table(name = "users")
 @Entity
 class User(
+	@Column(name = "user_uid")
+	var userUid: Long = -1,
 	
 	@Column(name = "nickname")
-	var nickname: String,
+	var nickname: String = "",
 	
 	@Column(name = "level")
 	var level: Int = 0, // deprecated
@@ -20,9 +22,9 @@ class User(
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	val id: Int? = null,
+	val rid: Long? = null,
 ) {
-	constructor() : this("")
+	constructor() : this(-1, "", 0, 0, "Ma_0001")
 	
 	init {
 		/*

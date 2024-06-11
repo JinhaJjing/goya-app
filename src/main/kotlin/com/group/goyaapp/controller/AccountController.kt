@@ -27,7 +27,7 @@ class AccountController(
 			val result = accountService.saveAccount(request)
 			return DefaultRes.res(StatusCode.CREATED, ResponseMessage.SIGNUP_SUCCESS, result)
 		} catch (e: Exception) {
-			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message, "")
+			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message)
 		}
 	}
 	
@@ -44,9 +44,9 @@ class AccountController(
 	): DefaultRes<out String> {
 		try {
 			accountService.deleteAccount(request)
-			return DefaultRes.res(StatusCode.OK, ResponseMessage.DELETE_ACCOUNT_SUCCESS, "")
+			return DefaultRes.res(StatusCode.OK, ResponseMessage.WITHDRAWAL_SUCCESS, "")
 		} catch (e: Exception) {
-			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message, "")
+			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message)
 		}
 	}
 	
@@ -59,7 +59,7 @@ class AccountController(
 			val result = accountService.updateAccountLogin(request)
 			return DefaultRes.res(StatusCode.OK, ResponseMessage.LOGIN_SUCCESS, result)
 		} catch (e: Exception) {
-			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message, "")
+			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message)
 		}
 	}
 	
@@ -72,7 +72,7 @@ class AccountController(
 			val result = accountService.updateAccountLogout(request)
 			return DefaultRes.res(StatusCode.OK, ResponseMessage.LOGOUT_SUCCESS, result)
 		} catch (e: Exception) {
-			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message, "")
+			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message)
 		}
 	}
 }

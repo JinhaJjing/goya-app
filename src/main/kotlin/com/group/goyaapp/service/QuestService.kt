@@ -35,7 +35,7 @@ class QuestService(
 		val curQuestUserInfo = questRepository.findByUserUidAndQuestId(request.userUid, request.questId) ?: Quest(
 			request.userUid, request.questId
 		)
-		val user = userRepository.findById(request.userUid)
+		val user = userRepository.findByUserUid(request.userUid)
 		requireNotNull(user) { "유저 정보를 찾을 수 없습니다." }
 		require(user.curMap == questData.QuestMapID) { "퀘스트를 수락할 수 없는 맵입니다." }
 		require(curQuestUserInfo.state == QuestState.AVAILABLE) { "퀘스트를 수락할 수 없는 상태입니다." }
