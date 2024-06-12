@@ -69,11 +69,11 @@ class QuestService(
 	 */
 	@Transactional
 	fun loadQuestList(request: QuestLoadRequest): List<QuestResponse> {
-		val userQuestList = questRepository.findByUserUid(request.user_uid)
+		val userQuestList = questRepository.findByUserUid(request.userUid)
 		val questDataList: ArrayList<QuestData>? =
 			readDataFromFile("questData.json", object : TypeToken<ArrayList<QuestData>?>() {})
 		return questDataList!!.map { questData ->
-			val quest = Quest(request.user_uid, questData.QuestID)
+			val quest = Quest(request.userUid, questData.QuestID)
 			if (userQuestList != null) {
 				val quest2 = userQuestList.filter { userQuest -> userQuest.questId == questData.QuestID }
 				if (quest2.isNotEmpty()) {
@@ -90,6 +90,6 @@ class QuestService(
 	 */
 	@Transactional
 	fun checkSpiritCount(request: QuestLoadRequest): Int {
-		return questRepository.findByUserUid(request.user_uid)?.count { it.state == QuestState.FINISHED } ?: 0
+		return questRepository.findByUserUid(request.userUid)?.count { it.state == QuestState.FINISHED } ?: 0
 	}
 }
