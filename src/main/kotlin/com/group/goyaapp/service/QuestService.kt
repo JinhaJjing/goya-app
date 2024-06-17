@@ -69,11 +69,12 @@ class QuestService(
 	 */
 	@Transactional
 	fun loadQuestList(request: QuestLoadRequest): List<QuestResponse> {
-		val userQuestList = questRepository.findByUserUid(request.userUid)
+		val user = userRepository.findByUserUid(request.userUid) ?: throw Exception("해당 유저가 존재하지 않습니다.")
+		val userQuestList = questRepository.findByUserUid(user.userUid)
 		val questDataList: ArrayList<QuestData>? =
 			readDataFromFile("questData.json", object : TypeToken<ArrayList<QuestData>?>() {})
 		return questDataList!!.map { questData ->
-			val quest = Quest(request.userUid, questData.QuestID)
+			val quest = Quest(user.userUid, questData.QuestID)
 			if (userQuestList != null) {
 				val quest2 = userQuestList.filter { userQuest -> userQuest.questId == questData.QuestID }
 				if (quest2.isNotEmpty()) {

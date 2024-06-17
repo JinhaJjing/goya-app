@@ -1,6 +1,7 @@
 package com.group.goyaapp.domain
 
 import com.group.goyaapp.domain.enumType.QuestState
+import com.group.goyaapp.util.getServerDateTime
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -20,10 +21,10 @@ class Quest(
 	var count: Int = 0,
 	
 	@Column(name = "datetime_add")
-	var datetimeAdd: LocalDateTime? = LocalDateTime.now(),
+	var datetimeAdd: LocalDateTime? = getServerDateTime(),
 	
 	@Column(name = "datetime_mod")
-	var datetimeMod: LocalDateTime? = LocalDateTime.now(),
+	var datetimeMod: LocalDateTime? = getServerDateTime(),
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

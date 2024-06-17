@@ -45,7 +45,7 @@ class QuestServiceTest @Autowired constructor(
 	@Test
 	@DisplayName("퀘스트 수락이 정상 동작한다")
 	fun acceptQuestTest() {        // given
-		userRepository.save(User("얄루진하찡", curMap = "Ma_0001"))
+		userRepository.save(User(1))
 		
 		// when
 		questService.acceptQuest(QuestAcceptRequest(1, "Qu_0001"))

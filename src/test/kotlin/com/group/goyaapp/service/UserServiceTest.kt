@@ -1,7 +1,6 @@
 package com.group.goyaapp.service
 
 import com.group.goyaapp.domain.User
-import com.group.goyaapp.dto.request.user.UserCreateRequest
 import com.group.goyaapp.dto.request.user.UserUpdateRequest
 import com.group.goyaapp.repository.UserRepository
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
@@ -26,10 +25,10 @@ class UserServiceTest @Autowired constructor(
 	@Test
 	@DisplayName("유저 저장이 정상 동작한다")
 	fun saveUserTest() { // given
-		val request = UserCreateRequest(1, "진하찡")
+		val request = UserUpdateRequest(1, "진하찡")
 		
 		// when
-		userService.createUser(request)
+		userService.updateNickname(request)
 		
 		// then
 		val results = userRepository.findAll()
@@ -43,8 +42,8 @@ class UserServiceTest @Autowired constructor(
 	fun getUsersTest() { // given
 		userRepository.saveAll(
 			listOf(
-				User("JinhaJjing"),
-				User("Yalru"),
+				User(1, "JinhaJjing"),
+				User(1, "Yalru"),
 			)
 		)
 		
@@ -60,7 +59,7 @@ class UserServiceTest @Autowired constructor(
 	@Test
 	@DisplayName("유저 삭제가 정상 동작한다")
 	fun deleteUserTest() { // given
-		userRepository.save(User("JinhaJjing"))
+		userRepository.save(User(1, "JinhaJjing"))
 		
 		// when
 		userService.deleteUser(1)
@@ -72,10 +71,10 @@ class UserServiceTest @Autowired constructor(
 	@Test
 	@DisplayName("Create user with unique nickname")
 	fun shouldCreateUserWithUniqueNickname() {        // given
-		val request = UserCreateRequest(1, "UniqueNick")
+		val request = UserUpdateRequest(1, "UniqueNick")
 		
 		// when
-		userService.createUser(request)
+		userService.updateNickname(request)
 		
 		// then
 		val savedUser = userRepository.findByNickname("UniqueNick")
@@ -85,12 +84,12 @@ class UserServiceTest @Autowired constructor(
 	@Test
 	@DisplayName("Fail to create user with duplicate nickname")
 	fun shouldFailToCreateUserWithDuplicateNickname() {        // given
-		userRepository.save(User("DuplicateNick"))
-		val request = UserCreateRequest(1, "DuplicateNick")
+		userRepository.save(User(1, "DuplicateNick"))
+		val request = UserUpdateRequest(1, "DuplicateNick")
 		
 		// when
 		val exception = assertThrows<Exception> {
-			userService.createUser(request)
+			userService.updateNickname(request)
 		}
 		
 		// then
@@ -100,7 +99,7 @@ class UserServiceTest @Autowired constructor(
 	@Test
 	@DisplayName("Update user with unique nickname")
 	fun shouldUpdateUserWithUniqueNickname() {        // given
-		val savedUser = userRepository.save(User("OldNick"))
+		val savedUser = userRepository.save(User(1, "OldNick"))
 		val request = UserUpdateRequest(savedUser.userUid, "NewNick")
 		
 		// when
@@ -116,8 +115,8 @@ class UserServiceTest @Autowired constructor(
 	@Test
 	@DisplayName("Fail to update user with duplicate nickname")
 	fun shouldFailToUpdateUserWithDuplicateNickname() {        // given
-		userRepository.save(User("ExistingNick"))
-		val savedUser = userRepository.save(User("OldNick"))
+		userRepository.save(User(1, "ExistingNick"))
+		val savedUser = userRepository.save(User(1, "OldNick"))
 		val request = UserUpdateRequest(savedUser.rid!!, "ExistingNick")
 		
 		// when
@@ -132,7 +131,7 @@ class UserServiceTest @Autowired constructor(
 	@Test
 	@DisplayName("Delete existing user")
 	fun shouldDeleteExistingUser() {        // given
-		val savedUser = userRepository.save(User("ToBeDeleted"))
+		val savedUser = userRepository.save(User(1, "ToBeDeleted"))
 		
 		// when
 		userService.deleteUser(savedUser.rid!!)

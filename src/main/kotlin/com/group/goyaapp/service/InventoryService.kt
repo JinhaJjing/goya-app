@@ -4,9 +4,9 @@ import com.group.goyaapp.domain.Inventory
 import com.group.goyaapp.dto.request.ItemUpdateRequest
 import com.group.goyaapp.dto.response.InventoryResponse
 import com.group.goyaapp.repository.InventoryRepository
+import com.group.goyaapp.util.getServerDateTime
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDateTime
 
 @Service
 class InventoryService(
@@ -22,7 +22,7 @@ class InventoryService(
 		val inventory = inventoryRepository.findByUserUidAndItemId(request.userUid, request.itemId)
 		if (inventory != null) {
 			inventory.itemCount += request.itemCount
-			inventory.datetimeMod = LocalDateTime.now()
+			inventory.datetimeMod = getServerDateTime()
 		}
 		else {
 			inventoryRepository.save(Inventory(request.userUid, request.itemId, request.itemCount))

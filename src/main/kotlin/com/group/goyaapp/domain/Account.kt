@@ -1,5 +1,6 @@
 package com.group.goyaapp.domain
 
+import com.group.goyaapp.util.getServerDateTime
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -12,13 +13,13 @@ class Account(
 	var accountPW: String,
 	
 	@Column(name = "datetime_add")
-	var datetimeAdd: LocalDateTime? = LocalDateTime.now(),
+	var datetimeAdd: LocalDateTime? = getServerDateTime(),
 	
 	@Column(name = "datetime_mod")
-	var datetimeMod: LocalDateTime? = LocalDateTime.now(),
+	var datetimeMod: LocalDateTime? = getServerDateTime(),
 	
 	@Column(name = "datetime_last_login")
-	var datetimeLastLogin: LocalDateTime? = LocalDateTime.MIN,
+	var datetimeLastLogin: LocalDateTime? = getServerDateTime(),
 	
 	@Id
 	@Column(name = "user_uid")

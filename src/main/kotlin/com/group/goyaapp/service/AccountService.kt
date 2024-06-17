@@ -7,9 +7,9 @@ import com.group.goyaapp.dto.request.account.AccountLogoutRequest
 import com.group.goyaapp.dto.request.account.AccountUpdateRequest
 import com.group.goyaapp.dto.response.AccountResponse
 import com.group.goyaapp.repository.AccountRepository
+import com.group.goyaapp.util.getServerDateTime
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDateTime
 
 @Service
 class AccountService(
@@ -21,8 +21,8 @@ class AccountService(
 		val newUser = Account(request.id, request.pw)
 		val account = accountRepository.findByAccountId(request.id)
 		if (account != null) throw Exception("이미 존재하는 아이디입니다.")
-		newUser.datetimeAdd = LocalDateTime.now()
-		newUser.datetimeMod = LocalDateTime.now()
+		newUser.datetimeAdd = getServerDateTime()
+		newUser.datetimeMod = getServerDateTime()
 		return accountRepository.save(newUser).let { AccountResponse.of(it) }
 	}
 	
@@ -35,8 +35,8 @@ class AccountService(
 	fun updateAccountLogin(request: AccountUpdateRequest): AccountResponse {
 		val account =
 			accountRepository.findByAccountIdAndAccountPW(request.id, request.pw) ?: throw Exception("계정이 존재하지 않습니다.")
-		account.datetimeMod = LocalDateTime.now()
-		account.datetimeLastLogin = LocalDateTime.now()
+		account.datetimeMod = getServerDateTime()
+		account.datetimeLastLogin = getServerDateTime()
 		accountRepository.save(account)
 		return accountRepository.findByAccountId(account.accountId).let { AccountResponse.of(it!!) }
 	}
@@ -44,8 +44,8 @@ class AccountService(
 	@Transactional
 	fun updateAccountLogout(request: AccountLogoutRequest): Account {
 		val account = accountRepository.findByUserUid(request.userUid) ?: throw Exception("계정이 존재하지 않습니다.")
-		account.datetimeMod = LocalDateTime.now()
-		account.datetimeLastLogin = LocalDateTime.now()
+		account.datetimeMod = getServerDateTime()
+		account.datetimeLastLogin = getServerDateTime()
 		return accountRepository.save(account)
 	}
 	
