@@ -21,7 +21,7 @@ class UserController(
 	): DefaultRes<out Any> {
 		try {
 			val result = userService.updateNickname(request)
-			return DefaultRes.res(StatusCode.CREATED, ResponseMessage.CREATE_USER_SUCCESS, result)
+			return DefaultRes.res(StatusCode.OK, ResponseMessage.CREATE_USER_SUCCESS, result)
 		} catch (e: Exception) {
 			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message)
 		}

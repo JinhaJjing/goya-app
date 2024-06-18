@@ -25,7 +25,7 @@ class QuestController(
 	): DefaultRes<List<QuestResponse>> {
 		try {
 			val result = questService.loadQuestList(request)
-			return DefaultRes.res(StatusCode.CREATED, ResponseMessage.QUEST_INFO_SUCCESS, result)
+			return DefaultRes.res(StatusCode.OK, ResponseMessage.QUEST_INFO_SUCCESS, result)
 		} catch (e: Exception) {
 			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message)
 		}
@@ -39,7 +39,7 @@ class QuestController(
 	): DefaultRes<QuestResponse> {
 		try {
 			val result = questService.clearQuest(request)
-			return DefaultRes.res(StatusCode.CREATED, ResponseMessage.QUEST_CLEAR_SUCCESS, result)
+			return DefaultRes.res(StatusCode.OK, ResponseMessage.QUEST_CLEAR_SUCCESS, result)
 		} catch (e: Exception) {
 			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message)
 		}
@@ -54,7 +54,7 @@ class QuestController(
 		
 		try {
 			val result = questService.acceptQuest(request)
-			return DefaultRes.res(StatusCode.CREATED, ResponseMessage.QUEST_ACCEPT_SUCCESS, result)
+			return DefaultRes.res(StatusCode.OK, ResponseMessage.QUEST_ACCEPT_SUCCESS, result)
 		} catch (e: Exception) {
 			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message)
 		}

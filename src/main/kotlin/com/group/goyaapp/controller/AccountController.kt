@@ -27,7 +27,7 @@ class AccountController(
 	): DefaultRes<out Any> {
 		try {
 			val result = accountService.saveAccount(request)
-			return DefaultRes.res(StatusCode.CREATED, ResponseMessage.SIGNUP_SUCCESS, result)
+			return DefaultRes.res(StatusCode.OK, ResponseMessage.SIGNUP_SUCCESS, result)
 		} catch (e: Exception) {
 			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message)
 		}
