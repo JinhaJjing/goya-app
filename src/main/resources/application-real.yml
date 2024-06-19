@@ -1,0 +1,21 @@
+spring:
+  config:
+    activate:
+      on-profile: real
+  datasource:
+    url: "jdbc:mysql://43.201.26.129:3306/goya_db"
+    username: "goya"
+    password: "Goya1234!"
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+    defer-datasource-initialization: true
+  mvc:
+    path match:
+      matching-strategy: ant_path_matcher
+server:
+  port: 8888
+  address: 0.0.0.0

@@ -6,6 +6,7 @@ import com.group.goyaapp.dto.request.user.UserUpdateRequest
 import com.group.goyaapp.dto.response.UserResponse
 import com.group.goyaapp.repository.AccountRepository
 import com.group.goyaapp.repository.UserRepository
+import com.group.goyaapp.util.getServerDateTime
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -19,6 +20,8 @@ class UserService(
 		accountRepository.findByUserUid(request.userUid) ?: throw Exception("계정이 존재하지 않습니다.")
 		var curUser = userRepository.findByUserUid(request.userUid)
 		if (curUser == null || curUser.nickname == "") curUser = User(request.userUid)
+		else curUser.datetimeAdd = getServerDateTime()
+		curUser.datetimeMod = getServerDateTime()
 		curUser.updateNickName(request.nickname)
 		return userRepository.save(curUser).let { UserResponse.of(it) }
 	}

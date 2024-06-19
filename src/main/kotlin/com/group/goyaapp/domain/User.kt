@@ -1,6 +1,8 @@
 package com.group.goyaapp.domain
 
+import com.group.goyaapp.util.getServerDateTime
 import jakarta.persistence.*;
+import java.time.LocalDateTime
 
 @Table(name = "users")
 @Entity
@@ -19,6 +21,12 @@ class User(
 	
 	@Column(name = "cur_map")
 	var curMap: String = "Ma_0001",
+	
+	@Column(name = "datetime_add")
+	var datetimeAdd: LocalDateTime? = getServerDateTime(),
+	
+	@Column(name = "datetime_mod")
+	var datetimeMod: LocalDateTime? = getServerDateTime(),
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

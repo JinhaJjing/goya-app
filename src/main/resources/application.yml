@@ -1,6 +1,5 @@
 spring:
   profiles:
     group:
-      logging: dev
-    active: dev
-#    active: local
+      logging: dev, local, real
+    active: real
