@@ -81,4 +81,16 @@ class AccountController(
 			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message)
 		}
 	}
+	
+	@Operation(summary = "게스트 회원가입", description = "게스트 계정을 만듭니다.")
+	@PostMapping("/account/guest")
+	fun saveGuestAccount(): DefaultRes<out Any> {
+		try {
+			val result = accountService.saveGuestAccount()
+			return DefaultRes.res(StatusCode.OK, ResponseMessage.SIGNUP_SUCCESS, result)
+		} catch (e: Exception) {
+			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message)
+		}
+	}
+	
 }

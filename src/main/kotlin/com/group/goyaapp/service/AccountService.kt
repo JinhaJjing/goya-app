@@ -21,8 +21,6 @@ class AccountService(
 		val newUser = Account(request.id, request.pw)
 		val account = accountRepository.findByAccountId(request.id)
 		if (account != null) throw Exception("이미 존재하는 아이디입니다.")
-		newUser.datetimeAdd = getServerDateTime()
-		newUser.datetimeMod = getServerDateTime()
 		return accountRepository.save(newUser).let { AccountResponse.of(it) }
 	}
 	
@@ -55,5 +53,12 @@ class AccountService(
 			request.id, request.pw
 		) ?: throw Exception("계정이 존재하지 않습니다.")
 		accountRepository.delete(account)
+	}
+	
+	@Transactional
+	fun saveGuestAccount(): AccountResponse {
+		val guestIdPw = "guest" + (1..1000000).random().toString()
+		val newGuest = Account(guestIdPw, guestIdPw)
+		return accountRepository.save(newGuest).let { AccountResponse.of(it) }
 	}
 }

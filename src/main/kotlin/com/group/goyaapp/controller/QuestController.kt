@@ -59,4 +59,19 @@ class QuestController(
 			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message)
 		}
 	}
+	
+	@Operation(summary = "퀘스트 초기화(치트용)", description = "유저의 퀘스트 상태를 초기화합니다.")
+	@PostMapping("/quest/reset")
+	fun resetQuest(
+		@RequestBody
+		request: QuestLoadRequest
+	): DefaultRes<List<QuestResponse>> {
+		try {
+			val result = questService.resetQuest(request)
+			return DefaultRes.res(StatusCode.OK, ResponseMessage.QUEST_INFO_SUCCESS, result)
+		} catch (e: Exception) {
+			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message)
+		}
+	}
+	
 }
