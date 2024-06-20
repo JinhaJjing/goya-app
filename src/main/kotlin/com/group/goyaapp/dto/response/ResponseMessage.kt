@@ -31,6 +31,9 @@ object ResponseMessage {
 	const val QUEST_CLEAR_SUCCESS: String = "퀘스트 클리어 성공"
 	const val QUEST_ACCEPT_SUCCESS: String = "퀘스트 수락 성공"
 	
+	// Map
+	const val MAP_ENTER_SUCCESS: String = "맵 입장 성공"
+	
 	
 	// 서버
 	const val SERVER_ERROR: String = "서버 내부 에러"

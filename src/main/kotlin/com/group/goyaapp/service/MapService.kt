@@ -19,14 +19,17 @@ class MapService(
 	
 	@Transactional
 	fun mapEnter(request: MapEnterRequest): UserResponse {
+		val user = userRepository.findByUserUid(request.userUid) ?: throw Exception("해당 유저가 존재하지 않습니다.")
 		val mapDataList: ArrayList<MapData>? =
 			readDataFromFile("mapData.json", object : TypeToken<ArrayList<MapData>?>() {})
+		
 		val mapInfo = mapDataList!!.first { it.MapID == request.mapId }
-		val userQuestInfo =
-			questRepository.findByUserUidAndQuestId(request.userUid, mapInfo.UnlockCondition)
-			?: throw Exception("퀘스트 정보가 없습니다.")
-		if (userQuestInfo.state != QuestState.FINISHED) throw Exception("맵이 열려있지 않습니다.")
-		val user = userRepository.findByUserUid(request.userUid) ?: throw Exception("해당 유저가 존재하지 않습니다.")
+		if (mapInfo.UnlockCondition != "x") {
+			val userQuestInfo =
+				questRepository.findByUserUidAndQuestId(request.userUid, mapInfo.UnlockCondition)
+				?: throw Exception("맵 진입하기 위한 퀘스트가 완료되지 않았습니다.")
+			if (userQuestInfo.state != QuestState.FINISHED) throw Exception("맵이 열려있지 않습니다.")
+		}
 		user.updateUserCurMap(request.mapId)
 		return userRepository.save(user).let { UserResponse.of(it) }
 	}
