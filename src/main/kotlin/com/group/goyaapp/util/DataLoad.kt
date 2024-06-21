@@ -51,3 +51,14 @@ fun <T> readDataFromFile(filename: String, typeToken: TypeToken<ArrayList<T>?>):
 		return Gson().fromJson<ArrayList<T>>(fileContents, type)
 	}
 }
+
+fun getQuestData(): ArrayList<QuestData> {
+	return readDataFromFile("questData.json", object : TypeToken<ArrayList<QuestData>?>() {})
+	       ?: throw Exception("퀘스트 데이터를 불러올 수 없습니다.")
+}
+
+fun getMapData(): ArrayList<MapData> {
+	return readDataFromFile("mapData.json", object : TypeToken<ArrayList<MapData>?>() {})
+	       ?: throw Exception("맵 데이터를 불러올 수 없습니다.")
+	
+}

@@ -1,10 +1,8 @@
 package com.group.goyaapp.service
 
-import com.google.common.reflect.TypeToken
 import com.group.goyaapp.domain.Quest
 import com.group.goyaapp.domain.User
 import com.group.goyaapp.domain.enumType.QuestState
-import com.group.goyaapp.dto.data.QuestData
 import com.group.goyaapp.dto.request.quest.QuestAcceptRequest
 import com.group.goyaapp.dto.request.quest.QuestActionRequest
 import com.group.goyaapp.dto.request.quest.QuestClearRequest
@@ -12,8 +10,8 @@ import com.group.goyaapp.dto.request.quest.QuestLoadRequest
 import com.group.goyaapp.dto.response.QuestResponse
 import com.group.goyaapp.repository.QuestRepository
 import com.group.goyaapp.repository.UserRepository
+import com.group.goyaapp.util.getQuestData
 import com.group.goyaapp.util.getServerDateTime
-import com.group.goyaapp.util.readDataFromFile
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -30,10 +28,8 @@ class QuestService(
 		// 퀘스트 상태 업데이트
 		updateQuestState(request.userUid)
 		
-		val questDataList: ArrayList<QuestData>? =
-			readDataFromFile("questData.json", object : TypeToken<ArrayList<QuestData>?>() {})
 		val user = userRepository.findByUserUid(request.userUid)
-		val questData = questDataList!!.first { it.QuestID == request.questId }
+		val questData = getQuestData().first { it.QuestID == request.questId }
 		if (questData.PreQuest != "x") {
 			val preQuestUserInfo = questRepository.findByUserUidAndQuestId(request.userUid, questData.PreQuest)
 			requireNotNull(preQuestUserInfo) { "선행 퀘스트 정보를 찾을 수 없습니다." }
@@ -68,9 +64,7 @@ class QuestService(
 	 */
 	@Transactional
 	fun clearQuest(request: QuestClearRequest): List<QuestResponse> {
-		val questDataList: ArrayList<QuestData>? =
-			readDataFromFile("questData.json", object : TypeToken<ArrayList<QuestData>?>() {})
-		val questData = questDataList!!.first { it.QuestID == request.questId }
+		val questData = getQuestData().first { it.QuestID == request.questId }
 		val curQuestUserInfo = questRepository.findByUserUidAndQuestId(request.userUid, request.questId)
 		val user = userRepository.findByUserUid(request.userUid)
 		
@@ -104,14 +98,12 @@ class QuestService(
 	@Transactional
 	fun loadQuestList(request: QuestLoadRequest): List<QuestResponse> {
 		val user = userRepository.findByUserUid(request.userUid) ?: throw Exception("해당 유저가 존재하지 않습니다.")
-		val questDataList: ArrayList<QuestData>? =
-			readDataFromFile("questData.json", object : TypeToken<ArrayList<QuestData>?>() {})
 		
 		// 퀘스트 상태 업데이트
 		updateQuestState(request.userUid)
 		
 		val userQuestList = questRepository.findByUserUid(user.userUid)
-		return questDataList!!.map { questData ->
+		return getQuestData().map { questData ->
 			val quest = Quest(user.userUid, questData.QuestID)
 			if (userQuestList != null) {
 				val quest2 = userQuestList.filter { userQuest -> userQuest.questId == questData.QuestID }
@@ -129,12 +121,9 @@ class QuestService(
 	 * 유저의 퀘스트 상태를 업데이트한다.
 	 */
 	fun updateQuestState(userUid: Long) {
-		val questDataList: ArrayList<QuestData>? =
-			readDataFromFile("questData.json", object : TypeToken<ArrayList<QuestData>?>() {})
-		
 		questRepository.findByUserUid(userUid)?.map { userQuest ->
 			// count가 만족했으면 달성 상태로 변경
-			val questData = questDataList!!.first { it.QuestID == userQuest.questId }
+			val questData = getQuestData().first { it.QuestID == userQuest.questId }
 			
 			if (userQuest.state == QuestState.ACCOMPLISHING) {
 				// MissionCondition 이 Quest인 경우 그 퀘스트 깨면 Complete 처리
@@ -198,9 +187,7 @@ class QuestService(
 	 * 퀘스트 조건에 해당하는 액션 시 카운트를 추가합니다
 	 */
 	fun questAction(request: QuestActionRequest): List<QuestResponse> {
-		val questDataList: ArrayList<QuestData>? =
-			readDataFromFile("questData.json", object : TypeToken<ArrayList<QuestData>?>() {})
-		questDataList!!.map {
+		getQuestData().map {
 			if (it.MissionCondition == request.type && it.MissionTarget == request.target) {
 				val userQuest = questRepository.findByUserUidAndQuestId(request.userUid, it.QuestID)
 				
