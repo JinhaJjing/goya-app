@@ -6,6 +6,7 @@ import com.group.goyaapp.domain.User
 import com.group.goyaapp.domain.enumType.QuestState
 import com.group.goyaapp.dto.data.QuestData
 import com.group.goyaapp.dto.request.quest.QuestAcceptRequest
+import com.group.goyaapp.dto.request.quest.QuestActionRequest
 import com.group.goyaapp.dto.request.quest.QuestClearRequest
 import com.group.goyaapp.dto.request.quest.QuestLoadRequest
 import com.group.goyaapp.dto.response.QuestResponse
@@ -25,7 +26,10 @@ class QuestService(
 	 * 퀘스트 수락
 	 */
 	@Transactional
-	fun acceptQuest(request: QuestAcceptRequest): QuestResponse {
+	fun acceptQuest(request: QuestAcceptRequest): List<QuestResponse> {
+		// 퀘스트 상태 업데이트
+		updateQuestState(request.userUid)
+		
 		val questDataList: ArrayList<QuestData>? =
 			readDataFromFile("questData.json", object : TypeToken<ArrayList<QuestData>?>() {})
 		val user = userRepository.findByUserUid(request.userUid)
@@ -40,51 +44,58 @@ class QuestService(
 		)
 		requireNotNull(user) { "유저 정보를 찾을 수 없습니다." }
 		require(user.curMap == questData.QuestMapID) { "퀘스트를 수락할 수 없는 맵입니다." }
-		require(curQuestUserInfo.state == QuestState.AVAILABLE) { "퀘스트를 수락할 수 없는 상태입니다." }
+		when (curQuestUserInfo.state) {
+			QuestState.UNAVAILABLE -> throw Exception("아직 퀘스트를 수락할 수 없습니다.")
+			QuestState.ACCOMPLISHING -> throw Exception("이미 진행중인 퀘스트입니다.")
+			QuestState.FINISHED, QuestState.COMPLETED -> throw Exception("이미 완료된 퀘스트입니다.")
+		}
 		
 		curQuestUserInfo.state = QuestState.ACCOMPLISHING
 		questRepository.save(curQuestUserInfo)
 		
 		// 퀘스트 시작 액션 처리
 		if (questData.StartAction2.startsWith("Tp")) {
-			val mapIdNum = questData.StartAction1.substring(2)
+			val mapIdNum = questData.StartAction2.substring(questData.StartAction2.length - 4)
 			val tpMapId = "Ma_$mapIdNum"
 			teleportMap(user, tpMapId)
 		}
 		
-		return QuestResponse.of(curQuestUserInfo)
+		return loadQuestList(QuestLoadRequest(request.userUid))
 	}
 	
 	/**
 	 * 퀘스트 클리어
 	 */
 	@Transactional
-	fun clearQuest(request: QuestClearRequest): QuestResponse {
+	fun clearQuest(request: QuestClearRequest): List<QuestResponse> {
 		val questDataList: ArrayList<QuestData>? =
 			readDataFromFile("questData.json", object : TypeToken<ArrayList<QuestData>?>() {})
 		val questData = questDataList!!.first { it.QuestID == request.questId }
 		val curQuestUserInfo = questRepository.findByUserUidAndQuestId(request.userUid, request.questId)
 		val user = userRepository.findByUserUid(request.userUid)
 		
-		requireNotNull(curQuestUserInfo) { "유저 퀘스트 수락 이력을 찾을 수 없습니다." }
-		require(curQuestUserInfo.state == QuestState.ACCOMPLISHING) { "퀘스트를 클리어할 수 없는 상태입니다." }
-		require(curQuestUserInfo.count >= questData.MissionCount) { "퀘스트 클리어 조건을 만족하지 못했습니다." }
-		
 		requireNotNull(user) { "유저 정보를 찾을 수 없습니다." }
-		require(user.curMap == questData.QuestMapID) { "퀘스트를 수락할 수 없는 맵입니다." }
-		require(curQuestUserInfo.state == QuestState.AVAILABLE) { "퀘스트를 수락할 수 없는 상태입니다." }
+		requireNotNull(curQuestUserInfo) { "유저 퀘스트 수락 이력을 찾을 수 없습니다." }
+		require(user.curMap == questData.QuestMapID) { "퀘스트를 클리어할 수 없는 맵입니다." }
+		require(curQuestUserInfo.count >= questData.MissionCount) { "퀘스트 클리어 조건을 만족하지 못했습니다." }
+		when (curQuestUserInfo.state) {
+			QuestState.UNAVAILABLE, QuestState.AVAILABLE -> throw Exception("아직 퀘스트를 수락할 수 없습니다.")
+			QuestState.ACCOMPLISHING -> throw Exception("아직 진행중인 퀘스트입니다.")
+			QuestState.FINISHED -> throw Exception("이미 완료된 퀘스트입니다.")
+		}
+		
 		
 		curQuestUserInfo.state = QuestState.FINISHED
 		questRepository.save(curQuestUserInfo)
 		
 		// 퀘스트 완료 액션 처리
 		if (questData.EndAction2.startsWith("Tp")) {
-			val mapIdNum = questData.StartAction1.substring(2)
+			val mapIdNum = questData.StartAction2.substring(questData.StartAction2.length - 4)
 			val tpMapId = "Ma_$mapIdNum"
 			teleportMap(user, tpMapId)
 		}
 		
-		return QuestResponse.of(curQuestUserInfo)
+		return loadQuestList(QuestLoadRequest(request.userUid))
 	}
 	
 	/**
@@ -108,8 +119,7 @@ class QuestService(
 					quest.state = quest2.first().state
 					quest.count = quest2.first().count
 				}
-			}
-			
+			}/*
 			// 수락 가능한 상태
 			if (quest.state == QuestState.UNAVAILABLE) {
 				if (questData.PreQuest != "x") {
@@ -121,12 +131,7 @@ class QuestService(
 				else {
 					quest.state = QuestState.AVAILABLE
 				}
-			}
-			
-			// 현재 맵과 같은지 확인
-			if (user.curMap != questData.QuestMapID) {
-				quest.state = QuestState.UNAVAILABLE
-			}
+			}*/
 			
 			QuestResponse.of(quest)
 		}
@@ -142,10 +147,42 @@ class QuestService(
 		questRepository.findByUserUid(userUid)?.map { userQuest ->
 			// count가 만족했으면 달성 상태로 변경
 			val questData = questDataList!!.first { it.QuestID == userQuest.questId }
-			if (userQuest.state == QuestState.ACCOMPLISHING && userQuest.count >= questData.MissionCount) {
-				userQuest.state = QuestState.COMPLETED
-				questRepository.save(userQuest)
+			
+			if (userQuest.state == QuestState.ACCOMPLISHING) {
+				//Dialog : NPC 대화
+				//Item : 아이템 수집
+				//Monster : 몬스터 사냥
+				//Quest : 선행 퀘스트 완료
+				//Game :
+				// MissionCondition 이 Quest인 경우 그 퀘스트 깨면 Complete 처리
+				if (questData.MissionCondition == "Quest") {
+					questRepository.findByUserUidAndQuestId(userUid, questData.MissionTarget)?.let {
+						if (it.state == QuestState.FINISHED) {
+							userQuest.state = QuestState.COMPLETED
+						}
+					}
+				}
+				// 그 외 경우 // TODO
+				else {
+					if (userQuest.count >= questData.MissionCount) {
+						userQuest.state = QuestState.COMPLETED
+					}
+				}
 			}
+			else if (userQuest.state == QuestState.UNAVAILABLE) {
+				// 조건 확인 후 수락 가능한 상태로 변경
+				if (questData.PreQuest != "x") {
+					val preQuestUserInfo = questRepository.findByUserUidAndQuestId(userUid, questData.PreQuest)
+					if (preQuestUserInfo != null && preQuestUserInfo.state == QuestState.FINISHED) {
+						userQuest.state = QuestState.AVAILABLE
+					}
+				}
+				else {
+					userQuest.state = QuestState.AVAILABLE
+				}
+			}
+			
+			questRepository.save(userQuest)
 		}
 	}
 	
@@ -169,5 +206,24 @@ class QuestService(
 		}
 		
 		return loadQuestList(request)
+	}
+	
+	/**
+	 * 퀘스트 조건에 해당하는 액션 시 카운트를 추가합니다
+	 */
+	fun questAction(request: QuestActionRequest): List<QuestResponse> {
+		val questDataList: ArrayList<QuestData>? =
+			readDataFromFile("questData.json", object : TypeToken<ArrayList<QuestData>?>() {})
+		questDataList!!.map {
+			if (it.MissionCondition == request.type && it.MissionTarget == request.target) {
+				val userQuest = questRepository.findByUserUidAndQuestId(request.userUid, it.QuestID)
+				if (userQuest != null && userQuest.state == QuestState.ACCOMPLISHING) {
+					userQuest.count = (request.count + userQuest.count).coerceAtMost(it.MissionCount)
+					questRepository.save(userQuest)
+				}
+			}
+		}
+		
+		return loadQuestList(QuestLoadRequest(request.userUid))
 	}
 }

@@ -4,7 +4,6 @@ import com.group.goyaapp.dto.request.account.AccountCreateRequest
 import com.group.goyaapp.dto.request.account.AccountDeleteRequest
 import com.group.goyaapp.dto.request.account.AccountLogoutRequest
 import com.group.goyaapp.dto.request.account.AccountUpdateRequest
-import com.group.goyaapp.dto.response.AccountResponse
 import com.group.goyaapp.dto.response.DefaultRes
 import com.group.goyaapp.dto.response.ResponseMessage
 import com.group.goyaapp.dto.response.StatusCode
@@ -35,7 +34,7 @@ class AccountController(
 	
 	@Operation(summary = "계정 전체 조회(치트용)", description = "모든 계정을 조회합니다.")
 	@GetMapping("/account")
-	fun getAccountList(): DefaultRes<List<AccountResponse>> {
+	fun getAccountList(): DefaultRes<out Any> {
 		val result = accountService.getAccountAll()
 		return DefaultRes.res(StatusCode.OK, ResponseMessage.READ_ACCOUNT_SUCCESS, result)
 	}

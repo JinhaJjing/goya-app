@@ -1,10 +1,10 @@
 package com.group.goyaapp.controller
 
 import com.group.goyaapp.dto.request.quest.QuestAcceptRequest
+import com.group.goyaapp.dto.request.quest.QuestActionRequest
 import com.group.goyaapp.dto.request.quest.QuestClearRequest
 import com.group.goyaapp.dto.request.quest.QuestLoadRequest
 import com.group.goyaapp.dto.response.DefaultRes
-import com.group.goyaapp.dto.response.QuestResponse
 import com.group.goyaapp.dto.response.ResponseMessage
 import com.group.goyaapp.dto.response.StatusCode
 import com.group.goyaapp.service.QuestService
@@ -22,7 +22,7 @@ class QuestController(
 	fun loadQuestList(
 		@RequestBody
 		request: QuestLoadRequest
-	): DefaultRes<List<QuestResponse>> {
+	): DefaultRes<out Any> {
 		try {
 			val result = questService.loadQuestList(request)
 			return DefaultRes.res(StatusCode.OK, ResponseMessage.QUEST_INFO_SUCCESS, result)
@@ -36,7 +36,7 @@ class QuestController(
 	fun clearQuest(
 		@RequestBody
 		request: QuestClearRequest
-	): DefaultRes<QuestResponse> {
+	): DefaultRes<out Any> {
 		try {
 			val result = questService.clearQuest(request)
 			return DefaultRes.res(StatusCode.OK, ResponseMessage.QUEST_CLEAR_SUCCESS, result)
@@ -50,7 +50,7 @@ class QuestController(
 	fun acceptQuest(
 		@RequestBody
 		request: QuestAcceptRequest
-	): DefaultRes<QuestResponse> {
+	): DefaultRes<out Any> {
 		
 		try {
 			val result = questService.acceptQuest(request)
@@ -65,10 +65,24 @@ class QuestController(
 	fun resetQuest(
 		@RequestBody
 		request: QuestLoadRequest
-	): DefaultRes<List<QuestResponse>> {
+	): DefaultRes<out Any> {
 		try {
 			val result = questService.resetQuest(request)
 			return DefaultRes.res(StatusCode.OK, ResponseMessage.QUEST_INFO_SUCCESS, result)
+		} catch (e: Exception) {
+			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message)
+		}
+	}
+	
+	@Operation(summary = "퀘스트 액션", description = "퀘스트 액션을 수행합니다.")
+	@PostMapping("/quest/action")
+	fun actionQuest(
+		@RequestBody
+		request: QuestActionRequest
+	): DefaultRes<out Any> {
+		try {
+			val result = questService.questAction(request)
+			return DefaultRes.res(StatusCode.OK, ResponseMessage.QUEST_ACTION_SUCCESS, result)
 		} catch (e: Exception) {
 			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message)
 		}

@@ -30,6 +30,7 @@ object ResponseMessage {
 	const val QUEST_INFO_SUCCESS: String = "퀘스트 정보 조회 성공"
 	const val QUEST_CLEAR_SUCCESS: String = "퀘스트 클리어 성공"
 	const val QUEST_ACCEPT_SUCCESS: String = "퀘스트 수락 성공"
+	const val QUEST_ACTION_SUCCESS: String = "퀘스트 액션 성공"
 	
 	// Map
 	const val MAP_ENTER_SUCCESS: String = "맵 입장 성공"
