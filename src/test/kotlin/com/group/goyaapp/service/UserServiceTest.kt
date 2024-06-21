@@ -28,7 +28,7 @@ class UserServiceTest @Autowired constructor(
 		val request = UserUpdateRequest(1, "진하찡")
 		
 		// when
-		userService.updateNickname(request)
+		userService.updateUser(request)
 		
 		// then
 		val results = userRepository.findAll()
@@ -74,7 +74,7 @@ class UserServiceTest @Autowired constructor(
 		val request = UserUpdateRequest(1, "UniqueNick")
 		
 		// when
-		userService.updateNickname(request)
+		userService.updateUser(request)
 		
 		// then
 		val savedUser = userRepository.findByNickname("UniqueNick")
@@ -89,7 +89,7 @@ class UserServiceTest @Autowired constructor(
 		
 		// when
 		val exception = assertThrows<Exception> {
-			userService.updateNickname(request)
+			userService.updateUser(request)
 		}
 		
 		// then
@@ -103,7 +103,7 @@ class UserServiceTest @Autowired constructor(
 		val request = UserUpdateRequest(savedUser.userUid, "NewNick")
 		
 		// when
-		userService.updateNickname(request)
+		userService.updateUser(request)
 		
 		// then
 		val updatedUser = userRepository.findByUserUid(savedUser.userUid)
@@ -121,7 +121,7 @@ class UserServiceTest @Autowired constructor(
 		
 		// when
 		val exception = assertThrows<Exception> {
-			userService.updateNickname(request)
+			userService.updateUser(request)
 		}
 		
 		// then

@@ -16,7 +16,7 @@ class UserService(
 	private val accountRepository: AccountRepository,
 ) {
 	@Transactional
-	fun updateNickname(request: UserUpdateRequest): UserResponse {
+	fun updateUser(request: UserUpdateRequest): UserResponse {
 		accountRepository.findByUserUid(request.userUid) ?: throw Exception("계정이 존재하지 않습니다.")
 		var curUser = userRepository.findByUserUid(request.userUid)
 		if (curUser == null || curUser.nickname == "") curUser = User(request.userUid)

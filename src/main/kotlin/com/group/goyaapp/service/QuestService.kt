@@ -119,19 +119,7 @@ class QuestService(
 					quest.state = quest2.first().state
 					quest.count = quest2.first().count
 				}
-			}/*
-			// 수락 가능한 상태
-			if (quest.state == QuestState.UNAVAILABLE) {
-				if (questData.PreQuest != "x") {
-					val preQuestUserInfo = questRepository.findByUserUidAndQuestId(request.userUid, questData.PreQuest)
-					if (preQuestUserInfo != null && preQuestUserInfo.state == QuestState.FINISHED) {
-						quest.state = QuestState.AVAILABLE
-					}
-				}
-				else {
-					quest.state = QuestState.AVAILABLE
-				}
-			}*/
+			}
 			
 			QuestResponse.of(quest)
 		}
@@ -149,11 +137,6 @@ class QuestService(
 			val questData = questDataList!!.first { it.QuestID == userQuest.questId }
 			
 			if (userQuest.state == QuestState.ACCOMPLISHING) {
-				//Dialog : NPC 대화
-				//Item : 아이템 수집
-				//Monster : 몬스터 사냥
-				//Quest : 선행 퀘스트 완료
-				//Game :
 				// MissionCondition 이 Quest인 경우 그 퀘스트 깨면 Complete 처리
 				if (questData.MissionCondition == "Quest") {
 					questRepository.findByUserUidAndQuestId(userUid, questData.MissionTarget)?.let {
@@ -194,6 +177,9 @@ class QuestService(
 		userRepository.save(user)
 	}
 	
+	/**
+	 * 퀘스트 초기화
+	 */
 	fun resetQuest(
 		request: QuestLoadRequest
 	): List<QuestResponse> {
@@ -217,6 +203,16 @@ class QuestService(
 		questDataList!!.map {
 			if (it.MissionCondition == request.type && it.MissionTarget == request.target) {
 				val userQuest = questRepository.findByUserUidAndQuestId(request.userUid, it.QuestID)
+				
+				// 산예 미니게임의 경우 스토리 진행 중에도 지속 참여 가능하다
+				if (request.type == "Game" && request.target == "Np_0002") {
+					if ((userQuest != null && (userQuest.state == QuestState.ACCOMPLISHING || userQuest.state == QuestState.COMPLETED || userQuest.state == QuestState.FINISHED))) {
+						// 최고 점수로 저장한다
+						userQuest.count = Math.max(request.count, userQuest.count)
+						questRepository.save(userQuest)
+					}
+				}
+				
 				if (userQuest != null && userQuest.state == QuestState.ACCOMPLISHING) {
 					userQuest.count = (request.count + userQuest.count).coerceAtMost(it.MissionCount)
 					questRepository.save(userQuest)

@@ -60,6 +60,23 @@ class QuestController(
 		}
 	}
 	
+	@Operation(
+		summary = "퀘스트 액션",
+		description = "퀘스트 액션을 수행합니다.\n" + "\n" + "type : Game → 리듬게임🎵 / target : 리듬게임대상(Np_0002) / count : 점수\n" + "\n" + "type : Dialog → NPC 대화🙌 / target : 대화대상(Np_0001) / count : 대화 횟수\n" + "\n" + "type : Item → 아이템 수집🎁 / target : 수집대상(It_0001) / count : 획득 아이템 갯수\n" + "\n" + "type : Monster → 몬스터 사냥🎃 / target : 처치대상(Ms_0001) / count : 몬스터 처치수\n" + "\n"
+	)
+	@PostMapping("/quest/action")
+	fun actionQuest(
+		@RequestBody
+		request: QuestActionRequest
+	): DefaultRes<out Any> {
+		try {
+			val result = questService.questAction(request)
+			return DefaultRes.res(StatusCode.OK, ResponseMessage.QUEST_ACTION_SUCCESS, result)
+		} catch (e: Exception) {
+			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message)
+		}
+	}
+	
 	@Operation(summary = "퀘스트 초기화(치트용)", description = "유저의 퀘스트 상태를 초기화합니다.")
 	@PostMapping("/quest/reset")
 	fun resetQuest(
@@ -69,20 +86,6 @@ class QuestController(
 		try {
 			val result = questService.resetQuest(request)
 			return DefaultRes.res(StatusCode.OK, ResponseMessage.QUEST_INFO_SUCCESS, result)
-		} catch (e: Exception) {
-			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message)
-		}
-	}
-	
-	@Operation(summary = "퀘스트 액션", description = "퀘스트 액션을 수행합니다.")
-	@PostMapping("/quest/action")
-	fun actionQuest(
-		@RequestBody
-		request: QuestActionRequest
-	): DefaultRes<out Any> {
-		try {
-			val result = questService.questAction(request)
-			return DefaultRes.res(StatusCode.OK, ResponseMessage.QUEST_ACTION_SUCCESS, result)
 		} catch (e: Exception) {
 			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message)
 		}
