@@ -17,7 +17,7 @@
 
 <a name="documentation"></a>
 
-* 필요하다면 `development`, `test`와 `production` 환경을 분리하세요.
+* dev, local, real 환경으로 분리합니다.
 
   _이유:_
   > 다른 데이터, 토큰, API, 포트 등... 아마도 별도의 환경을 필요로 할 것입니다. 아마도 당신은 격리된 `development` 모드에서는 가짜 API를 호출하고 예상가능한 데이터를 리턴해서 수동/자동
