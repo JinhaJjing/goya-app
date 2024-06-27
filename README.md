@@ -3,9 +3,9 @@
 
 [<img src="./src/main/resources/GOYA.png" width="180" height="180">](https://www.google.com/)
 
-# 돗가비야기 &middot; [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://www.google.com)
+# [게임이름미정] &middot; [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://www.google.com)
 
-> 여기에 내용을 씁시다. [링크예시](http://www.google.com).
+> 게임 기획서 링크를 첨부합니다. [링크예시](http://www.google.com).
 
 - [문서화](#documentation)
 
