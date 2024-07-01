@@ -33,7 +33,6 @@ class AccountService(
 	fun updateAccountLogin(request: AccountUpdateRequest): AccountResponse {
 		val account =
 			accountRepository.findByAccountIdAndAccountPW(request.id, request.pw) ?: throw Exception("계정이 존재하지 않습니다.")
-		println("계정 로그인 로그 : ${account.accountId} ${account.accountPW} ${account.datetimeLastLogin}")
 		account.datetimeLastLogin = getServerDateTime()
 		accountRepository.save(account)
 		return accountRepository.findByAccountId(account.accountId).let { AccountResponse.of(it!!) }
