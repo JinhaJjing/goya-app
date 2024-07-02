@@ -33,6 +33,7 @@ class AccountService(
 	fun updateAccountLogin(request: AccountUpdateRequest): AccountResponse {
 		val account =
 			accountRepository.findByAccountIdAndAccountPW(request.id, request.pw) ?: throw Exception("계정이 존재하지 않습니다.")
+		if (account.accountId !== request.id || account.accountPW !== request.pw) throw Exception("아이디나 비밀번호가 일치하지 않습니다.")
 		account.datetimeLastLogin = getServerDateTime()
 		accountRepository.save(account)
 		return accountRepository.findByAccountId(account.accountId).let { AccountResponse.of(it!!) }
