@@ -59,8 +59,22 @@ class UserController(
 		request: UserRequest
 	): DefaultRes<out Any> {
 		try {
-			val result = userService.deleteUser(request.userUid)
+			val result = userService.deleteUser(request)
 			return DefaultRes.res(StatusCode.OK, ResponseMessage.DELETE_USER_SUCCESS, result)
+		} catch (e: Exception) {
+			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message)
+		}
+	}
+	
+	@Operation(summary = "유저 초기화", description = "특정 유저의 게임 정보를 초기화합니다.")
+	@PostMapping("/user/init")
+	fun initUser(
+		@RequestBody
+		request: UserRequest
+	): DefaultRes<out Any> {
+		try {
+			val result = userService.initUser(request)
+			return DefaultRes.res(StatusCode.OK, ResponseMessage.INIT_USER_SUCCESS, result)
 		} catch (e: Exception) {
 			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message)
 		}
