@@ -17,9 +17,12 @@ spring:
   mvc:
     path match:
       matching-strategy: ant_path_matcher
+  lifecycle:
+    timeout-per-shutdown-phase: 10s
 server:
   port: 8888
   address: 0.0.0.0
+  shutdown: graceful
 logging:
   level:
     org.hibernate.orm.jdbc.bind: TRACE
