@@ -28,7 +28,7 @@ jobs:
 
       - name: 🚧Set Yaml
         uses: microsoft/variable-substitution@v1
-        with:ㄱㄷㅁ
+        with:
           files: ./src/main/resources/application-real.yml
         env:
           spring.datasource.url: ${{ secrets.DB_URL }}
