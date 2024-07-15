@@ -3,9 +3,6 @@ spring:
     activate:
       on-profile: real
   datasource:
-    url: "jdbc:mysql://13.125.39.166:3306/goya_db"
-    username: "goya"
-    password: "Goya1234!"
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     properties:
