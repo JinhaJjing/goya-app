@@ -4,6 +4,9 @@ spring:
       on-profile: real
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
+    url: xxx
+    username: yyy
+    password: zzz
   jpa:
     properties:
       hibernate:
