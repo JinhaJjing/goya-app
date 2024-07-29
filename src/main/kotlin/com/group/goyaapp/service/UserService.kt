@@ -23,7 +23,8 @@ class UserService(
 		var curUser = userRepository.findByUserUid(request.userUid)
 		if (curUser == null || curUser.nickname == "") curUser = User(request.userUid)
 		else curUser.datetimeAdd = getServerDateTime()
-		curUser.updateNickName(request.nickname)
+		if (request.nickname.trim() == "") throw Exception("닉네임을 입력해주세요.")
+		curUser.updateNickName(request.nickname.trim())
 		curUser.datetimeMod = getServerDateTime()
 		return userRepository.save(curUser).let { UserResponse.of(it) }
 	}

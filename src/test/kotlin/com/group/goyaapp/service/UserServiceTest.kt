@@ -1,6 +1,7 @@
 package com.group.goyaapp.service
 
 import com.group.goyaapp.domain.User
+import com.group.goyaapp.dto.request.user.UserRequest
 import com.group.goyaapp.dto.request.user.UserUpdateRequest
 import com.group.goyaapp.repository.UserRepository
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
@@ -62,7 +63,7 @@ class UserServiceTest @Autowired constructor(
 		userRepository.save(User(1, "JinhaJjing"))
 		
 		// when
-		userService.deleteUser(1)
+		userService.deleteUser(UserRequest(1))
 		
 		// then
 		assertThat(userRepository.findAll()).isEmpty()
@@ -134,7 +135,7 @@ class UserServiceTest @Autowired constructor(
 		val savedUser = userRepository.save(User(1, "ToBeDeleted"))
 		
 		// when
-		userService.deleteUser(savedUser.rid!!)
+		userService.deleteUser(UserRequest(savedUser.rid!!))
 		
 		// then
 		assertThat(userRepository.findById(savedUser.rid!!)).isNull()
@@ -144,7 +145,7 @@ class UserServiceTest @Autowired constructor(
 	@DisplayName("Fail to delete non-existing user")
 	fun shouldFailToDeleteNonExistingUser() {        // when
 		val exception = assertThrows<Exception> {
-			userService.deleteUser(9999)
+			userService.deleteUser(UserRequest(1))
 		}
 		
 		// then
