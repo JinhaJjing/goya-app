@@ -61,6 +61,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     implementation 'org.hibernate:hibernate-validator:8.0.0.Final'
+
+    implementation("io.github.cdimascio:dotenv-kotlin:6.2.2") // .env 파일을 사용하기 위한 라이브러리
 }
 
 tasks.named('test') {
