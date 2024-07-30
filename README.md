@@ -36,8 +36,7 @@
 * 언어 : Kotlin
 * 서버 : Spring Boot 3.0.1
 * DB : H2, MySQL
-* JPA * Spring Data Jpa
-* CI/CD : Git, EC2, S3(AWS)
+* CI/CD : Git, EC2, S3(AWS), GCP
 
 ## ✅한 일
 
