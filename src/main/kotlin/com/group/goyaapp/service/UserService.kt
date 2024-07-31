@@ -27,7 +27,7 @@ class UserService(
 		val reqNickname = request.nickname.trim()
 		if (reqNickname.isBlank()) throw Exception("닉네임을 입력해주세요.")
 		if (reqNickname.length < 2 || reqNickname.length > 8) throw Exception("닉네임은 2자 이상 8자 이하로 입력해주세요.")
-		if (!reqNickname.matches(Regex("^[a-zA-Z0-9가-힣]*$"))) throw Exception("닉네임은 한글, 영어, 숫자만 입력해주세요.")
+		if (!reqNickname.matches(Regex("^[a-zA-Z0-9ㄱ-ㅣ가-힣]*$"))) throw Exception("닉네임은 한글, 영어, 숫자만 입력해주세요.")
 		
 		curUser.updateNickName(reqNickname)
 		curUser.datetimeMod = getServerDateTime()
