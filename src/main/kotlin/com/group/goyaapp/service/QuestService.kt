@@ -199,8 +199,7 @@ class QuestService(
 						questRepository.save(userQuest)
 					}
 				}
-				
-				if (userQuest != null && userQuest.state == QuestState.ACCOMPLISHING) {
+				else if (userQuest != null && userQuest.state == QuestState.ACCOMPLISHING) {
 					userQuest.count = (request.count + userQuest.count).coerceAtMost(it.MissionCount)
 					questRepository.save(userQuest)
 				}
