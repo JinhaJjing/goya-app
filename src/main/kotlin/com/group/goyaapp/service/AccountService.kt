@@ -23,7 +23,7 @@ class AccountService(
 		if (reqId.length < 4 || reqId.length > 12) throw Exception("아이디는 4자 이상 12자 이하로 입력해주세요.")
 		if (reqPw.length < 4 || reqPw.length > 12) throw Exception("비밀번호는 4자 이상 12자 이하로 입력해주세요.")
 		if (!reqId.matches(Regex("^[a-zA-Z0-9]*$"))) throw Exception("아이디는 영어, 숫자만 입력해주세요.")
-		if (!reqPw.matches(Regex("^[a-zA-Z0-9]*$"))) throw Exception("비밀번호는 영어, 숫자만 입력해주세요.")
+		if (!reqPw.matches(Regex("^[a-zA-Z0-9!@#\$%^&*]*$"))) throw Exception("비밀번호는 영어, 숫자, 특수문자만 입력해주세요.")
 		
 		val newUser = Account(reqId, reqPw)
 		val account = accountRepository.findByAccountId(reqId)
