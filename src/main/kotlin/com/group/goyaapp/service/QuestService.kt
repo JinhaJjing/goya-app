@@ -1,6 +1,7 @@
 package com.group.goyaapp.service
 
 import com.group.goyaapp.domain.Quest
+import com.group.goyaapp.domain.Quest2
 import com.group.goyaapp.domain.User
 import com.group.goyaapp.domain.enumType.QuestState
 import com.group.goyaapp.dto.request.quest.QuestAcceptRequest
@@ -9,8 +10,10 @@ import com.group.goyaapp.dto.request.quest.QuestClearRequest
 import com.group.goyaapp.dto.request.quest.QuestLoadRequest
 import com.group.goyaapp.dto.response.QuestResponse
 import com.group.goyaapp.repository.QuestRepository
+import com.group.goyaapp.repository.QuestRepository2
 import com.group.goyaapp.repository.UserRepository
 import com.group.goyaapp.util.getQuestData
+import com.group.goyaapp.util.getQuestData2
 import com.group.goyaapp.util.getServerDateTime
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -19,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional
 class QuestService(
 	private val userRepository: UserRepository,
 	private val questRepository: QuestRepository,
+	private val questRepository2: QuestRepository2,
 ) {
 	/**
 	 * 퀘스트 수락
@@ -93,6 +97,50 @@ class QuestService(
 	}
 	
 	/**
+	 * 퀘스트 클리어 ver2
+	 * 퀘스트 클리어 시 다음 퀘스트 자동 수락
+	 */
+	@Transactional
+	fun clearQuest2(request: QuestClearRequest): List<QuestResponse> {
+		val questData2 = getQuestData2().first { it.QuestID == request.questId }
+		var curQuestUserInfo = questRepository2.findByUserUidAndQuestId(request.userUid, request.questId)
+		val user = userRepository.findByUserUid(request.userUid)
+		
+		requireNotNull(user) { "유저 정보를 찾을 수 없습니다." }
+		
+		if (curQuestUserInfo == null) {
+			if (questData2.QuestID != "Qu_0000") { // 튜토리얼 제외
+				throw Exception("유저 퀘스트 수락 이력을 찾을 수 없습니다.")
+			}
+			curQuestUserInfo = Quest2(request.userUid, questData2.QuestID, QuestState.ACCOMPLISHING)
+		}
+		
+		when (curQuestUserInfo.state) {
+			QuestState.UNAVAILABLE, QuestState.AVAILABLE -> throw Exception("진행중인 퀘스트가 아닙니다.")
+			QuestState.FINISHED -> throw Exception("이미 완료된 퀘스트입니다.")
+		}
+		
+		curQuestUserInfo.state = QuestState.FINISHED
+		questRepository2.save(curQuestUserInfo)
+		
+		// 다음 퀘스트 자동 수락
+		val nextQuestData = getQuestData2().getOrNull(getQuestData2().indexOf(questData2) + 1);
+		if (nextQuestData != null) {
+			val nextQuestUserInfo = questRepository2.findByUserUidAndQuestId(request.userUid, nextQuestData.QuestID)
+			if (nextQuestUserInfo == null) {
+				val nextQuest = Quest2(request.userUid, nextQuestData.QuestID, QuestState.ACCOMPLISHING)
+				questRepository2.save(nextQuest)
+			}
+			else {
+				nextQuestUserInfo.state = QuestState.ACCOMPLISHING
+				questRepository2.save(nextQuestUserInfo)
+			}
+		}
+		
+		return loadQuestList2(QuestLoadRequest(request.userUid))
+	}
+	
+	/**
 	 * 유저 퀘스트 리스트를 불러온다.
 	 */
 	@Transactional
@@ -104,6 +152,28 @@ class QuestService(
 		
 		val userQuestList = questRepository.findByUserUid(user.userUid)
 		return getQuestData().map { questData ->
+			val quest = Quest(user.userUid, questData.QuestID)
+			if (userQuestList != null) {
+				val quest2 = userQuestList.filter { userQuest -> userQuest.questId == questData.QuestID }
+				if (quest2.isNotEmpty()) {
+					quest.state = quest2.first().state
+					quest.count = quest2.first().count
+				}
+			}
+			
+			QuestResponse.of(quest)
+		}
+	}
+	
+	/**
+	 * 유저 퀘스트 정보 조회 ver2
+	 */
+	@Transactional
+	fun loadQuestList2(request: QuestLoadRequest): List<QuestResponse> {
+		val user = userRepository.findByUserUid(request.userUid) ?: throw Exception("해당 유저가 존재하지 않습니다.")
+		
+		val userQuestList = questRepository2.findByUserUid(user.userUid)
+		return getQuestData2().map { questData ->
 			val quest = Quest(user.userUid, questData.QuestID)
 			if (userQuestList != null) {
 				val quest2 = userQuestList.filter { userQuest -> userQuest.questId == questData.QuestID }

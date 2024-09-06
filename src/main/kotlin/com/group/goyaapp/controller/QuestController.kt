@@ -91,4 +91,17 @@ class QuestController(
 		}
 	}
 	
+	@Operation(summary = "퀘스트 클리어 ver2", description = "퀘스트 정보를 조회합니다.")
+	@PostMapping("/quest/clear2")
+	fun clearQuest2(
+		@RequestBody
+		request: QuestClearRequest
+	): DefaultRes<out Any> {
+		try {
+			val result = questService.clearQuest2(request)
+			return DefaultRes.res(StatusCode.OK, ResponseMessage.QUEST_CLEAR_SUCCESS, result)
+		} catch (e: Exception) {
+			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message)
+		}
+	}
 }

@@ -4,12 +4,14 @@ import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 import com.group.goyaapp.dto.data.MapData
 import com.group.goyaapp.dto.data.QuestData
+import com.group.goyaapp.dto.data.QuestData2
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.lang.reflect.Type
 
 fun loadDataAll() {
 	saveDataToFile("questData.json", googleSheetDataLoad("Quest"), QuestData::class.java)
+	saveDataToFile("questData2.json", googleSheetDataLoad("Quest2"), QuestData2::class.java)
 	saveDataToFile("mapData.json", googleSheetDataLoad("Map"), MapData::class.java)
 	println("=========================기획 데이터 로드 완료=========================")
 }
@@ -55,6 +57,11 @@ fun <T> readDataFromFile(filename: String, typeToken: TypeToken<ArrayList<T>?>):
 fun getQuestData(): ArrayList<QuestData> {
 	return readDataFromFile("questData.json", object : TypeToken<ArrayList<QuestData>?>() {})
 	       ?: throw Exception("퀘스트 데이터를 불러올 수 없습니다.")
+}
+
+fun getQuestData2(): ArrayList<QuestData2> {
+	return readDataFromFile("questData2.json", object : TypeToken<ArrayList<QuestData2>?>() {})
+	       ?: throw Exception("퀘스트2 데이터를 불러올 수 없습니다.")
 }
 
 fun getMapData(): ArrayList<MapData> {
