@@ -9,6 +9,8 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.lang.reflect.Type
 
+const val DATA_PATH: String = "src/main/resources/google_sheets_data/"
+
 fun loadDataAll() {
 	saveDataToFile("questData.json", googleSheetDataLoad("Quest"), QuestData::class.java)
 	saveDataToFile("questData2.json", googleSheetDataLoad("Quest2"), QuestData2::class.java)
@@ -39,15 +41,18 @@ fun <T> saveDataToFile(filename: String, data: Any, clazz: Class<T>) {
 			}
 		}
 		
-		FileOutputStream(filename).use { fos ->
-			val fileContents = Gson().toJson(dataList)
-			fos.write(fileContents.toByteArray())
+		val filePath = "${DATA_PATH}$filename"
+		FileOutputStream(filePath).use { fos ->
+			val json = Gson().toJson(dataList)
+			fos.write(json.toByteArray())
 		}
 	}
 }
 
 fun <T> readDataFromFile(filename: String, typeToken: TypeToken<ArrayList<T>?>): ArrayList<T>? {
-	FileInputStream(filename).use { fis ->
+	val filePath = "${DATA_PATH}$filename"
+	
+	FileInputStream(filePath).use { fis ->
 		val type: Type = typeToken.type
 		val fileContents = fis.readBytes().toString(Charsets.UTF_8)
 		return Gson().fromJson<ArrayList<T>>(fileContents, type)

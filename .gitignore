@@ -39,8 +39,5 @@ out/
 ### H2 DB
 /data/testdb.mv.db
 
-### 기획데이터 JSON ###
-*.json
-
 ### env 파일 ###
 .env
