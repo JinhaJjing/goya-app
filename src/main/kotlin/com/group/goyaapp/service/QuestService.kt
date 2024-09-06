@@ -104,37 +104,28 @@ class QuestService(
 	fun clearQuest2(request: QuestClearRequest): List<QuestResponse> {
 		val questData2 = getQuestData2().first { it.QuestID == request.questId }
 		var curQuestUserInfo = questRepository2.findByUserUidAndQuestId(request.userUid, request.questId)
-		val user = userRepository.findByUserUid(request.userUid)
+		val user = userRepository.findByUserUid(request.userUid) ?: throw Exception("유저 정보를 찾을 수 없습니다.")
 		
-		requireNotNull(user) { "유저 정보를 찾을 수 없습니다." }
+		if (curQuestUserInfo == null && questData2.QuestID != "Qu_0000") throw Exception("유저 퀘스트 수락 이력을 찾을 수 없습니다.")
+		curQuestUserInfo = curQuestUserInfo ?: Quest2(request.userUid, questData2.QuestID, QuestState.ACCOMPLISHING)
 		
-		if (curQuestUserInfo == null) {
-			if (questData2.QuestID != "Qu_0000") { // 튜토리얼 제외
-				throw Exception("유저 퀘스트 수락 이력을 찾을 수 없습니다.")
-			}
-			curQuestUserInfo = Quest2(request.userUid, questData2.QuestID, QuestState.ACCOMPLISHING)
-		}
-		
-		when (curQuestUserInfo.state) {
-			QuestState.UNAVAILABLE, QuestState.AVAILABLE -> throw Exception("진행중인 퀘스트가 아닙니다.")
-			QuestState.FINISHED -> throw Exception("이미 완료된 퀘스트입니다.")
-		}
+		if (curQuestUserInfo.state == QuestState.UNAVAILABLE || curQuestUserInfo.state == QuestState.AVAILABLE || curQuestUserInfo.state == QuestState.FINISHED) throw Exception(
+			"진행중인 퀘스트가 아닙니다."
+		)
 		
 		curQuestUserInfo.state = QuestState.FINISHED
 		questRepository2.save(curQuestUserInfo)
 		
 		// 다음 퀘스트 자동 수락
-		val nextQuestData = getQuestData2().getOrNull(getQuestData2().indexOf(questData2) + 1);
-		if (nextQuestData != null) {
+		val nextQuestData = getQuestData2().getOrNull(getQuestData2().indexOf(questData2) + 1)
+		if (nextQuestData != null || nextQuestData?.QuestID == "") {
 			val nextQuestUserInfo = questRepository2.findByUserUidAndQuestId(request.userUid, nextQuestData.QuestID)
-			if (nextQuestUserInfo == null) {
-				val nextQuest = Quest2(request.userUid, nextQuestData.QuestID, QuestState.ACCOMPLISHING)
-				questRepository2.save(nextQuest)
-			}
-			else {
-				nextQuestUserInfo.state = QuestState.ACCOMPLISHING
-				questRepository2.save(nextQuestUserInfo)
-			}
+			nextQuestUserInfo?.state = QuestState.ACCOMPLISHING
+			questRepository2.save(
+				nextQuestUserInfo ?: Quest2(
+					request.userUid, nextQuestData.QuestID, QuestState.ACCOMPLISHING
+				)
+			)
 		}
 		
 		return loadQuestList2(QuestLoadRequest(request.userUid))
