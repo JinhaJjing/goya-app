@@ -50,7 +50,11 @@ fun <T> saveDataToFile(filename: String, data: Any, clazz: Class<T>) {
 }
 
 fun <T> readDataFromFile(filename: String, typeToken: TypeToken<ArrayList<T>?>): ArrayList<T>? {
-	val filePath = "${DATA_PATH}$filename"
+	val env = System.getenv("ENVIRONMENT") ?: "local"
+	var filePath = filename
+	if (env == "local") {
+		filePath = "${DATA_PATH}$filename"
+	}
 	
 	FileInputStream(filePath).use { fis ->
 		val type: Type = typeToken.type
