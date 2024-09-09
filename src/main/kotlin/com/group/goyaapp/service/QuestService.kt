@@ -281,7 +281,7 @@ class QuestService(
 			questRepository2.save(userQuest)
 		}
 		
-		return loadQuestList(request)
+		return loadQuestList2(request)
 	}
 	
 	/**
