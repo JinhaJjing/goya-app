@@ -268,6 +268,23 @@ class QuestService(
 	}
 	
 	/**
+	 * 퀘스트 초기화 ver2
+	 */
+	fun resetQuest2(
+		request: QuestLoadRequest
+	): List<QuestResponse> {
+		val userQuestList = questRepository2.findByUserUid(request.userUid)
+		userQuestList?.map { userQuest ->
+			userQuest.state = QuestState.AVAILABLE
+			userQuest.count = 0
+			userQuest.datetimeMod = getServerDateTime()
+			questRepository2.save(userQuest)
+		}
+		
+		return loadQuestList(request)
+	}
+	
+	/**
 	 * 퀘스트 조건에 해당하는 액션 시 카운트를 추가합니다
 	 */
 	fun questAction(request: QuestActionRequest): List<QuestResponse> {
