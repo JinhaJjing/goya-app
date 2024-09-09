@@ -70,7 +70,7 @@ class QuestService(
 	fun acceptQuest2(request: QuestAcceptRequest): List<QuestResponse> {
 		val user = userRepository.findByUserUid(request.userUid)
 		val questData2 = getQuestData2().first { it.QuestID == request.questId }
-		val curQuestUserInfo = questRepository.findByUserUidAndQuestId(request.userUid, request.questId) ?: Quest(
+		val curQuestUserInfo = questRepository2.findByUserUidAndQuestId(request.userUid, request.questId) ?: Quest2(
 			request.userUid, request.questId, QuestState.AVAILABLE
 		)
 		requireNotNull(user) { "유저 정보를 찾을 수 없습니다." }
@@ -81,7 +81,7 @@ class QuestService(
 		}
 		
 		curQuestUserInfo.state = QuestState.ACCOMPLISHING
-		questRepository.save(curQuestUserInfo)
+		questRepository2.save(curQuestUserInfo)
 		
 		return loadQuestList2(QuestLoadRequest(request.userUid))
 	}
