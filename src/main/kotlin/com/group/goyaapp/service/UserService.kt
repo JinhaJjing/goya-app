@@ -6,6 +6,7 @@ import com.group.goyaapp.dto.request.user.UserUpdateRequest
 import com.group.goyaapp.dto.response.UserResponse
 import com.group.goyaapp.repository.AccountRepository
 import com.group.goyaapp.repository.QuestRepository
+import com.group.goyaapp.repository.QuestRepository2
 import com.group.goyaapp.repository.UserRepository
 import com.group.goyaapp.util.getServerDateTime
 import org.springframework.stereotype.Service
@@ -16,6 +17,7 @@ class UserService(
 	private val userRepository: UserRepository,
 	private val accountRepository: AccountRepository,
 	private val questRepository: QuestRepository,
+	private val questRepository2: QuestRepository2,
 ) {
 	@Transactional
 	fun updateUser(request: UserUpdateRequest): UserResponse {
@@ -56,6 +58,7 @@ class UserService(
 		val curUser = userRepository.findByUserUid(request.userUid) ?: throw Exception("해당 유저가 존재하지 않습니다.")
 		userRepository.delete(curUser)
 		questRepository.findByUserUid(request.userUid)?.forEach(questRepository::delete)
+		questRepository2.findByUserUid(request.userUid)?.forEach(questRepository2::delete)
 		// 게임 초기화할 컨텐츠가 더 생기면 추가 필요
 	}
 }
