@@ -135,7 +135,7 @@ class QuestController(
 	}
 	
 	@Operation(summary = "퀘스트 초기화 ver2(치트용)", description = "유저의 퀘스트 상태를 초기화합니다.")
-	@PostMapping("/quest/reset")
+	@PostMapping("/quest/reset2")
 	fun resetQuest2(
 		@RequestBody
 		request: QuestLoadRequest
