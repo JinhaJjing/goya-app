@@ -64,6 +64,29 @@ class QuestService(
 	}
 	
 	/**
+	 * 퀘스트 수락(ver 2)
+	 */
+	@Transactional
+	fun acceptQuest2(request: QuestAcceptRequest): List<QuestResponse> {
+		val user = userRepository.findByUserUid(request.userUid)
+		val questData2 = getQuestData2().first { it.QuestID == request.questId }
+		val curQuestUserInfo = questRepository.findByUserUidAndQuestId(request.userUid, request.questId) ?: Quest(
+			request.userUid, request.questId, QuestState.AVAILABLE
+		)
+		requireNotNull(user) { "유저 정보를 찾을 수 없습니다." }
+		require(request.questId == questData2.QuestID) { "퀘스트 정보를 찾을 수 없습니다." }
+		when (curQuestUserInfo.state) {
+			QuestState.ACCOMPLISHING -> throw Exception("이미 진행중인 퀘스트입니다.")
+			QuestState.FINISHED, QuestState.COMPLETED -> throw Exception("이미 완료된 퀘스트입니다.")
+		}
+		
+		curQuestUserInfo.state = QuestState.ACCOMPLISHING
+		questRepository.save(curQuestUserInfo)
+		
+		return loadQuestList2(QuestLoadRequest(request.userUid))
+	}
+	
+	/**
 	 * 퀘스트 클리어
 	 */
 	@Transactional

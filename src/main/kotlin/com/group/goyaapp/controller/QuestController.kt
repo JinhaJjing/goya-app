@@ -31,6 +31,20 @@ class QuestController(
 		}
 	}
 	
+	@Operation(summary = "퀘스트 정보 조회", description = "퀘스트 정보를 조회합니다.")
+	@PostMapping("/quest/info2")
+	fun loadQuestList2(
+		@RequestBody
+		request: QuestLoadRequest
+	): DefaultRes<out Any> {
+		try {
+			val result = questService.loadQuestList2(request)
+			return DefaultRes.res(StatusCode.OK, ResponseMessage.QUEST_INFO_SUCCESS, result)
+		} catch (e: Exception) {
+			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message)
+		}
+	}
+	
 	@Operation(summary = "퀘스트 클리어", description = "특정 퀘스트를 클리어합니다.")
 	@PostMapping("/quest/clear")
 	fun clearQuest(
@@ -39,6 +53,20 @@ class QuestController(
 	): DefaultRes<out Any> {
 		try {
 			val result = questService.clearQuest(request)
+			return DefaultRes.res(StatusCode.OK, ResponseMessage.QUEST_CLEAR_SUCCESS, result)
+		} catch (e: Exception) {
+			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message)
+		}
+	}
+	
+	@Operation(summary = "퀘스트 클리어 ver2", description = "퀘스트 정보를 조회합니다.")
+	@PostMapping("/quest/clear2")
+	fun clearQuest2(
+		@RequestBody
+		request: QuestClearRequest
+	): DefaultRes<out Any> {
+		try {
+			val result = questService.clearQuest2(request)
 			return DefaultRes.res(StatusCode.OK, ResponseMessage.QUEST_CLEAR_SUCCESS, result)
 		} catch (e: Exception) {
 			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message)
@@ -54,6 +82,21 @@ class QuestController(
 		
 		try {
 			val result = questService.acceptQuest(request)
+			return DefaultRes.res(StatusCode.OK, ResponseMessage.QUEST_ACCEPT_SUCCESS, result)
+		} catch (e: Exception) {
+			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message)
+		}
+	}
+	
+	@Operation(summary = "퀘스트 수락2", description = "특정 퀘스트를 수락합니다.")
+	@PostMapping("/quest/accept2")
+	fun acceptQuest2(
+		@RequestBody
+		request: QuestAcceptRequest
+	): DefaultRes<out Any> {
+		
+		try {
+			val result = questService.acceptQuest2(request)
 			return DefaultRes.res(StatusCode.OK, ResponseMessage.QUEST_ACCEPT_SUCCESS, result)
 		} catch (e: Exception) {
 			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message)
@@ -86,20 +129,6 @@ class QuestController(
 		try {
 			val result = questService.resetQuest(request)
 			return DefaultRes.res(StatusCode.OK, ResponseMessage.QUEST_INFO_SUCCESS, result)
-		} catch (e: Exception) {
-			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message)
-		}
-	}
-	
-	@Operation(summary = "퀘스트 클리어 ver2", description = "퀘스트 정보를 조회합니다.")
-	@PostMapping("/quest/clear2")
-	fun clearQuest2(
-		@RequestBody
-		request: QuestClearRequest
-	): DefaultRes<out Any> {
-		try {
-			val result = questService.clearQuest2(request)
-			return DefaultRes.res(StatusCode.OK, ResponseMessage.QUEST_CLEAR_SUCCESS, result)
 		} catch (e: Exception) {
 			return DefaultRes.res(StatusCode.BAD_REQUEST, e.message)
 		}
